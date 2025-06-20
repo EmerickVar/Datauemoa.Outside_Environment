@@ -1,0 +1,518 @@
+/* Quick Actions */
+.QuickActionsBar {
+	position: fixed;
+	bottom: 30px;
+	right: 30px;
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+	z-index: 9999;
+}
+
+/* Estados de la barra (open/closed) */
+.QuickActionsBar.open {
+	opacity: 1;
+	visibility: visible;
+}
+
+.QuickActionsBar.closed {
+	opacity: 0.8;
+	visibility: visible;
+}
+
+/* Botón toggle */
+.toggle-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	width: 56px;
+	height: 56px;
+	background-color: #171414;
+	border: 2px
+		solid
+		#2a2a2a;
+	border-radius: 50%;
+	cursor: pointer;
+	transition: all
+		0.3s
+		cubic-bezier(
+			0.4,
+			0,
+			0.2,
+			1
+		);
+	position: relative;
+	box-shadow: 0
+		8px
+		20px
+		rgba(
+			0,
+			0,
+			0,
+			0.3
+		);
+}
+
+.toggle-btn:hover {
+	transform: translateY(
+		-5px
+	);
+	border-color: #c80446;
+	box-shadow: 0
+		12px
+		25px
+		rgba(
+			200,
+			4,
+			70,
+			0.2
+		);
+}
+
+.toggle-btn
+	i {
+	font-size: 22px;
+	color: #fff;
+	transition: all
+		0.3s
+		ease;
+}
+
+.toggle-btn:hover
+	i {
+	color: #c80446;
+	transform: scale(
+		1.1
+	);
+}
+
+/* Badge de notificación */
+.badge {
+	position: absolute;
+	top: -2px;
+	right: -2px;
+	min-width: 22px;
+	height: 22px;
+	background-color: #c80446;
+	color: #fff;
+	font-size: 0.75rem;
+	font-weight: 600;
+	padding: 2px
+		6px;
+	border-radius: 8px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0
+		4px
+		8px
+		rgba(
+			200,
+			4,
+			70,
+			0.3
+		);
+	border: 2px
+		solid
+		#171414;
+	box-sizing: border-box;
+	transition: all
+		0.3s
+		ease;
+}
+
+.toggle-btn:hover
+	.badge {
+	transform: scale(
+		1.1
+	);
+}
+
+.QuickActionsBar-item {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 16px;
+	background-color: #171414;
+	border: 2px
+		solid
+		#2a2a2a;
+	border-radius: 15px;
+	box-shadow: 0
+		8px
+		20px
+		rgba(
+			0,
+			0,
+			0,
+			0.3
+		);
+	cursor: pointer;
+	transition: all
+		0.3s
+		cubic-bezier(
+			0.4,
+			0,
+			0.2,
+			1
+		);
+	position: relative;
+	overflow: hidden;
+	opacity: 0;
+	animation: slideIn
+		0.3s
+		ease
+		forwards;
+	animation-delay: calc(
+		var(
+				--item-index
+			) *
+			0.1s
+	);
+}
+
+/* Efecto hover */
+.QuickActionsBar-item:hover {
+	transform: translateY(
+		-5px
+	);
+	border-color: #c80446;
+	box-shadow: 0
+		12px
+		25px
+		rgba(
+			200,
+			4,
+			70,
+			0.2
+		);
+}
+
+.QuickActionsBar-item:active {
+	transform: scale(
+			0.95
+		)
+		translateY(
+			-5px
+		);
+}
+
+/* Iconos */
+.QuickActionsBar-item
+	i {
+	font-size: 22px;
+	color: #fff;
+	transition: all
+		0.3s
+		ease;
+	z-index: 2;
+}
+
+.QuickActionsBar-item:hover
+	i {
+	color: #c80446;
+	transform: scale(
+		1.1
+	);
+}
+
+/* Badge de notificación */
+.QuickActionsBar-badge {
+	position: absolute;
+	top: -2px;
+	right: -2px;
+	min-width: 22px;
+	height: 22px;
+	background-color: #c80446;
+	color: #fff;
+	font-size: 0.75rem;
+	font-weight: 600;
+	padding: 2px
+		6px;
+	border-radius: 8px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0
+		4px
+		8px
+		rgba(
+			200,
+			4,
+			70,
+			0.3
+		);
+	border: 2px
+		solid
+		#171414;
+	box-sizing: border-box;
+	transition: all
+		0.3s
+		ease;
+}
+
+.QuickActionsBar-item:hover
+	.QuickActionsBar-badge {
+	transform: scale(
+		1.1
+	);
+}
+
+/* Tooltip personalizado */
+.QuickActionsBar-item::before {
+	content: attr(
+		data-tooltip
+	);
+	position: absolute;
+	right: calc(
+		100% +
+			15px
+	);
+	top: 50%;
+	transform: translateY(
+			-50%
+		)
+		scale(
+			0.8
+		);
+	background-color: #171414;
+	color: #fff;
+	padding: 8px
+		12px;
+	border-radius: 8px;
+	font-size: 0.85rem;
+	white-space: nowrap;
+	opacity: 0;
+	visibility: hidden;
+	transition: all
+		0.3s
+		ease;
+	box-shadow: 0
+		4px
+		12px
+		rgba(
+			0,
+			0,
+			0,
+			0.2
+		);
+	border: 1px
+		solid
+		#2a2a2a;
+}
+
+.QuickActionsBar-item:hover::before {
+	opacity: 1;
+	visibility: visible;
+	transform: translateY(
+			-50%
+		)
+		scale(
+			1
+		);
+}
+
+/* Efecto de ripple */
+.QuickActionsBar-item::after {
+	content: '';
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background: radial-gradient(
+		circle,
+		rgba(
+				200,
+				4,
+				70,
+				0.1
+			)
+			0%,
+		transparent
+			70%
+	);
+	transform: scale(
+		0
+	);
+	opacity: 0;
+	transition: all
+		0.5s
+		ease;
+}
+
+.QuickActionsBar-item:active::after {
+	transform: scale(
+		2
+	);
+	opacity: 1;
+	transition: 0s;
+}
+
+/* Variantes de botones */
+.QuickActionsBar-item.primary {
+	background-color: #c80446;
+	border-color: transparent;
+}
+
+.QuickActionsBar-item.primary:hover {
+	background-color: #a00338;
+}
+
+.QuickActionsBar-item.primary
+	i {
+	color: #fff;
+}
+
+.QuickActionsBar-item.primary:hover
+	i {
+	color: #fff;
+}
+
+/* Animación de entrada */
+@keyframes slideIn {
+	from {
+		opacity: 0;
+		transform: translateX(
+			30px
+		);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(
+			0
+		);
+	}
+}
+
+/* Container de acciones */
+.actions-container {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	margin-bottom: 12px;
+}
+
+/* Notificaciones */
+.notifications-tab {
+	background: rgba(
+		255,
+		255,
+		255,
+		0.95
+	);
+	border: 1px
+		solid
+		#e5e7eb;
+	border-radius: 12px;
+	padding: 16px;
+	box-shadow: 0
+		4px
+		15px
+		rgba(
+			0,
+			0,
+			0,
+			0.1
+		);
+	max-width: 280px;
+	animation: fadeInUp
+		0.3s
+		ease;
+}
+
+.notifications-header {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-weight: 600;
+	color: #374151;
+	margin-bottom: 12px;
+	font-size: 14px;
+}
+
+.notifications-list {
+	max-height: 200px;
+	overflow-y: auto;
+}
+
+.notification-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 8px
+		12px;
+	border-radius: 8px;
+	margin-bottom: 8px;
+	background: #f9fafb;
+	cursor: pointer;
+	transition: all
+		0.2s
+		ease;
+}
+
+.notification-item:hover {
+	background: #f3f4f6;
+	transform: translateX(
+		4px
+	);
+}
+
+.notification-item.unread {
+	background: #eff6ff;
+	border-left: 3px
+		solid
+		#2563eb;
+}
+
+.notification-message {
+	font-size: 13px;
+	color: #6b7280;
+	flex: 1;
+}
+
+.unread-indicator {
+	width: 8px;
+	height: 8px;
+	background: #2563eb;
+	border-radius: 50%;
+	flex-shrink: 0;
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+	from {
+		opacity: 0;
+		transform: translateY(
+			10px
+		);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(
+			0
+		);
+	}
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+	.QuickActionsBar {
+		bottom: 20px;
+		right: 20px;
+		gap: 12px;
+	}
+
+	.QuickActionsBar-item {
+		padding: 14px;
+	}
+
+	.QuickActionsBar-item
+		i {
+		font-size: 20px;
+	}
+
+	/* Ocultar tooltip en móviles */
+	.QuickActionsBar-item::before {
+		display: none;
+	}
+}

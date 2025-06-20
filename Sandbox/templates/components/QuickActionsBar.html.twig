@@ -1,0 +1,66 @@
+{# templates/components/QuickActionsBar.html.twig #}
+<div{{ attributes.defaults({
+    class: 'QuickActionsBar ' ~ (isOpen ? 'open' : 'closed')
+}) }}>
+    <button 
+        data-action="live#action"
+        data-live-action-param="toggleBar"
+        class="toggle-btn"
+        title="Acciones rápidas"
+    >
+        <i class="fas fa-bolt"></i>
+        {% if notifications|filter(n => not n.read)|length > 0 %}
+            <span class="badge">{{ notifications|filter(n => not n.read)|length }}</span>
+        {% endif %}
+    </button>
+    
+    {% if isOpen %}
+        <div class="actions-container">
+            <button class="QuickActionsBar-item" data-tooltip="Descargar App" style="--item-index: 0" onclick="showMobileDownload()">
+                <i class="ri-smartphone-line"></i>
+            </button>
+            
+            <button class="QuickActionsBar-item" data-tooltip="Dashboard" style="--item-index: 1" onclick="window.location.href='{{ path('app_Home') }}'">
+                <i class="fas fa-tachometer-alt"></i>
+            </button>
+            
+            <button class="QuickActionsBar-item" data-tooltip="Documentación" style="--item-index: 2" onclick="window.open('https://docs.datauemoa.com', '_blank')">
+                <i class="ri-file-list-line"></i>
+            </button>
+
+            <button class="QuickActionsBar-item" data-tooltip="API" style="--item-index: 3" onclick="window.location.href='/api'">
+                <i class="fas fa-code"></i>
+            </button>
+            
+            <button class="QuickActionsBar-item" data-tooltip="Soporte" style="--item-index: 4" onclick="showSupportChat()">
+                <i class="ri-customer-service-2-line"></i>
+            </button>
+            
+            <button class="QuickActionsBar-item primary" data-tooltip="Ir arriba" style="--item-index: 5" onclick="scrollToTop()">
+                <i class="ri-arrow-up-line"></i>
+            </button>
+
+            {% if notifications|length > 0 %}
+                <div class="notifications-tab" style="--item-index: 6">
+                    <div class="notifications-header">
+                        <i class="fas fa-bell"></i>
+                        Notificaciones
+                    </div>
+                    <div class="notifications-list">
+                        {% for notification in notifications %}
+                            <div class="notification-item {{ not notification.read ? 'unread' : '' }}"
+                                 data-action="live#action"
+                                 data-live-action-param="markNotificationAsRead"
+                                 data-live-notification-id-param="{{ notification.id }}">
+                                <span class="notification-message">{{ notification.message }}</span>
+                                {% if not notification.read %}
+                                    <span class="unread-indicator"></span>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>

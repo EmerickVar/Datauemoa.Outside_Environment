@@ -1,0 +1,16 @@
+framework:
+    asset_mapper:
+        # The paths to make available to the asset mapper.
+        paths:
+            - assets/
+        missing_import_mode: strict
+        # Optimizations for better performance
+        public_prefix: '/assets/'
+
+when@prod:
+    framework:
+        asset_mapper:
+            missing_import_mode: warn
+            # Enable minification and optimization in production
+            importmap_script_attributes:
+                defer: true
