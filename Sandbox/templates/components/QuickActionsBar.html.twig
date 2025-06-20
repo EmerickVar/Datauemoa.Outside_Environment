@@ -8,7 +8,7 @@
         class="toggle-btn"
         title="Acciones rápidas"
     >
-        <i class="fas fa-bolt"></i>
+        <i class="ri-flashlight-fill"></i>
         {% if notifications|filter(n => not n.read)|length > 0 %}
             <span class="badge">{{ notifications|filter(n => not n.read)|length }}</span>
         {% endif %}
@@ -79,14 +79,14 @@
                 onclick="scrollToTop()"
                 title="Scroll to Top"
             >
-                <i class="ri-arrow-up-line"></i>
+                <i class="ri-arrow-up-box-fill"></i>
             </button>
 
             {# Panel de notificaciones (se muestra cuando activeTab es 'notifications') #}
             {% if activeTab == 'notifications' and notifications|length > 0 %}
                 <div class="notifications-tab" style="--item-index: 6">
                     <div class="notifications-header">
-                        <i class="fas fa-bell"></i>
+                        <i class="ri-notification-fill"></i>
                         Notificaciones
                     </div>
                     <div class="notifications-list">
