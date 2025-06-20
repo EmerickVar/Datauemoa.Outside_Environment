@@ -8,20 +8,9 @@
 			name="viewport"
 			content="width=device-width, initial-scale=1.0" />
 		<title>
-			{%
-			block
-			title
-			%}
-			DATA
-			UEMOA
-			-
-			Portal
-			de
-			Datos
-			Financieros
-			{%
-			endblock
-			%}
+			{% block title %}
+				DATA UEMOA - Portal de Datos Financieros
+			{% endblock %}
 		</title>
 		<link
 			rel="icon"
@@ -50,16 +39,9 @@
 		<!-- Component Styles -->
 		<link
 			rel="stylesheet"
-			href="{{
-				asset(
-					'styles/app.css'
-				)
-			}}" />
+			href="{{ asset('styles/app.css') }}" />
 
-		{%
-		block
-		stylesheets
-		%}
+		{% block stylesheets %}
 		<style>
 			:root {
 				--primary-blue: #2563eb;
@@ -354,9 +336,7 @@
 				}
 			}
 		</style>
-		{%
-		endblock
-		%}
+		{% endblock %}
 
 		<!-- Bootstrap 4.5.3 JavaScript and dependencies -->
 		<script
@@ -368,25 +348,11 @@
 			integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
 			crossorigin="anonymous"></script>
 
-		{%
-		block
-		javascripts
-		%}
-		{%
-		block
-		importmap
-		%}
-		{{
-			importmap(
-				'app'
-			)
-		}}
-		{%
-		endblock
-		%}
-		{%
-		endblock
-		%}
+		{% block javascripts %}
+			{% block importmap %}
+				{{ importmap( 'app' ) }}
+			{% endblock %}
+		{% endblock %}
 	</head>
 	<body>
 		<!-- Navigation -->
@@ -538,33 +504,10 @@
 					<div
 						class="col-lg-4 col-md-6 mb-4">
 						<h6>
-							Acerca
-							de
-							DATA
-							UEMOA
+							Acerca de DATAUEMOA
 						</h6>
 						<p>
-							Portal
-							líder
-							en
-							datos
-							financieros
-							y
-							empresariales,
-							proporcionando
-							información
-							precisa
-							y
-							análisis
-							en
-							tiempo
-							real
-							para
-							la
-							toma
-							de
-							decisiones
-							estratégicas.
+							Portal líder en datos financieros y empresariales, proporcionando información precisa y análisis en tiempo real para la toma de decisiones estratégicas.
 						</p>
 						<div
 							class="social-links">
@@ -626,9 +569,7 @@
 							<li>
 								<a
 									href="#"
-									>API
-									e
-									Integración</a
+									>API e Integración</a
 								>
 							</li>
 						</ul>
@@ -751,19 +692,8 @@
 					<p>
 						&copy;
 						{{ "now"|date("Y") }}
-						DATA
-						UEMOA
-						-
-						Todos
-						los
-						derechos
-						reservados.
-						Especialistas
-						en
-						inteligencia
-						financiera
-						y
-						empresarial.
+						DATA UEMOA - Todos los derechos reservados.
+						Especialistas en inteligencia financiera y empresarial.
 					</p>
 				</div>
 			</div>

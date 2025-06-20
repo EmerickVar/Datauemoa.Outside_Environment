@@ -16,31 +16,74 @@
     
     {% if isOpen %}
         <div class="actions-container">
-            <button class="QuickActionsBar-item" data-tooltip="Descargar App" style="--item-index: 0" onclick="showMobileDownload()">
-                <i class="ri-smartphone-line"></i>
+            {# Home - Ir a la página principal #}
+            <button 
+                class="QuickActionsBar-item" 
+                data-tooltip="Home" 
+                style="--item-index: 0" onclick="window.location.href='{{ path('app_Home') }}'"
+                title="Go to Home"
+            >
+                <i class="ri-home-5-fill"></i>
             </button>
             
-            <button class="QuickActionsBar-item" data-tooltip="Dashboard" style="--item-index: 1" onclick="window.location.href='{{ path('app_Home') }}'">
-                <i class="fas fa-tachometer-alt"></i>
+            {# Dashboard - Ir al panel de control #}
+            <button 
+                class="QuickActionsBar-item" 
+                data-tooltip="Dashboard" 
+                style="--item-index: 1" onclick="window.location.href='/dashboard'"
+                title="Go to Dashboard"
+            >
+                <i class="ri-dashboard-3-fill"></i>
             </button>
             
-            <button class="QuickActionsBar-item" data-tooltip="Documentación" style="--item-index: 2" onclick="window.open('https://docs.datauemoa.com', '_blank')">
-                <i class="ri-file-list-line"></i>
+            {# Bookmarks - Ir a marcadores #}
+            <button 
+                class="QuickActionsBar-item" 
+                data-tooltip="Bookmarks" 
+                style="--item-index: 2" onclick="window.location.href='/bookmarks'"
+                title="Go to Bookmarks"
+            >
+                <i class="ri-bookmark-3-fill"></i>
+            </button>
+            
+            {# Notifications - Alternar notificaciones #}
+            <button 
+                class="QuickActionsBar-item" 
+                data-tooltip="Notifications" 
+                style="--item-index: 3"
+                data-action="live#action"
+                data-live-action-param="switchTab"
+                data-live-tab-param="notifications">
+                <i class="ri-notification-4-fill"></i>
+                {% if notifications|filter(n => not n.read)|length > 0 %}
+                    <span class="QuickActionsBar-badge">{{ notifications|filter(n => not n.read)|length }}</span>
+                {% endif %}
             </button>
 
-            <button class="QuickActionsBar-item" data-tooltip="API" style="--item-index: 3" onclick="window.location.href='/api'">
-                <i class="fas fa-code"></i>
+            {# API - Ir a documentación de API #}
+            <button 
+                class="QuickActionsBar-item" 
+                data-tooltip="API" 
+                style="--item-index: 4" 
+                onclick="window.location.href='/api'"
+                title="Go to API Documentation"
+            >
+                <i class="ri-code-box-fill"></i>
             </button>
             
-            <button class="QuickActionsBar-item" data-tooltip="Soporte" style="--item-index: 4" onclick="showSupportChat()">
-                <i class="ri-customer-service-2-line"></i>
-            </button>
-            
-            <button class="QuickActionsBar-item primary" data-tooltip="Ir arriba" style="--item-index: 5" onclick="scrollToTop()">
+            {# Scroll To Top - Ir arriba (acción primaria) #}
+            <button 
+                class="QuickActionsBar-item primary" 
+                data-tooltip="Ir arriba" 
+                style="--item-index: 5" 
+                onclick="scrollToTop()"
+                title="Scroll to Top"
+            >
                 <i class="ri-arrow-up-line"></i>
             </button>
 
-            {% if notifications|length > 0 %}
+            {# Panel de notificaciones (se muestra cuando activeTab es 'notifications') #}
+            {% if activeTab == 'notifications' and notifications|length > 0 %}
                 <div class="notifications-tab" style="--item-index: 6">
                     <div class="notifications-header">
                         <i class="fas fa-bell"></i>
