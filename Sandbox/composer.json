@@ -44,7 +44,10 @@
         "symfony/validator": "6.4.*",
         "symfony/web-link": "6.4.*",
         "symfony/yaml": "6.4.*",
+        "twig/cssinliner-extra": "^3.21",
         "twig/extra-bundle": "^2.12|^3.0",
+        "twig/inky-extra": "^3.21",
+        "twig/markdown-extra": "^3.21",
         "twig/twig": "^2.12|^3.0"
     },
     "config": {

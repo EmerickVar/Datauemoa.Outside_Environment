@@ -1,7 +1,5 @@
 {# templates/components/QuickActionsBar.html.twig #}
-<div{{ attributes.defaults({
-    class: 'QuickActionsBar ' ~ (isOpen ? 'open' : 'closed')
-}) }}>
+<div{{ attributes.defaults({ class: 'QuickActionsBar ' ~ (isOpen ? 'open' : 'closed') }) }}>
     <button 
         data-action="live#action"
         data-live-action-param="toggleBar"
