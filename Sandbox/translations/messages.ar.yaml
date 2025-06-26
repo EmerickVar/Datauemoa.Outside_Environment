@@ -1,0 +1,44 @@
+language_selector:
+    choose_language: 'اختر اللغة'
+
+navbar:
+    home: 'الرئيسية'
+    markets: 'الأسواق'
+    currencies: 'العملات'
+    stocks: 'الأسهم'
+    cryptocurrencies: 'العملات المشفرة'
+    metals: 'المعادن'
+    companies: 'الشركات'
+    countries: 'البلدان'
+    news: 'الأخبار'
+    api: 'واجهة برمجة التطبيقات'
+
+footer:
+    about_title: 'حول DATAUEMOA'
+    about_description:
+        'البوابة الرائدة للبيانات المالية والتجارية، توفر معلومات دقيقة وتحليلات في الوقت الفعلي لاتخاذ القرارات
+        الاستراتيجية.'
+    services_title: 'الخدمات'
+    services:
+        financial_markets: 'الأسواق المالية'
+        business_data: 'البيانات التجارية'
+        risk_analysis: 'تحليل المخاطر'
+        api_integration: 'واجهة برمجة التطبيقات والتكامل'
+    markets_title: 'الأسواق'
+    support_title: 'الدعم'
+    support:
+        help_assistance: 'المساعدة والدعم'
+        api_documentation: 'توثيق واجهة برمجة التطبيقات'
+        developer_center: 'مركز المطورين'
+        service_status: 'حالة الخدمة'
+    legal_title: 'قانوني'
+    legal:
+        privacy_policy: 'سياسة الخصوصية'
+        terms_of_use: 'شروط الاستخدام'
+        legal_notices: 'الإشعارات القانونية'
+        gdpr: 'اللائحة العامة لحماية البيانات'
+    copyright: 'جميع الحقوق محفوظة. متخصصون في الذكاء المالي والتجاري.'
+
+home:
+    title: 'DATAUEMOA - بوابة البيانات المالية'
+    welcome: 'مرحباً بك في DATAUEMOA'

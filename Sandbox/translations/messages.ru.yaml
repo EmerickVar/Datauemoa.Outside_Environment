@@ -1,0 +1,44 @@
+language_selector:
+    choose_language: 'Выберите язык'
+
+navbar:
+    home: 'Главная'
+    markets: 'Рынки'
+    currencies: 'Валюты'
+    stocks: 'Акции'
+    cryptocurrencies: 'Криптовалюты'
+    metals: 'Металлы'
+    companies: 'Компании'
+    countries: 'Страны'
+    news: 'Новости'
+    api: 'API'
+
+footer:
+    about_title: 'О DATAUEMOA'
+    about_description:
+        'Ведущий портал финансовых и коммерческих данных, предоставляющий точную информацию и анализ в реальном времени
+        для принятия стратегических решений.'
+    services_title: 'Услуги'
+    services:
+        financial_markets: 'Финансовые рынки'
+        business_data: 'Коммерческие данные'
+        risk_analysis: 'Анализ рисков'
+        api_integration: 'API и интеграция'
+    markets_title: 'Рынки'
+    support_title: 'Поддержка'
+    support:
+        help_assistance: 'Помощь и поддержка'
+        api_documentation: 'Документация API'
+        developer_center: 'Центр разработчиков'
+        service_status: 'Статус сервиса'
+    legal_title: 'Правовая информация'
+    legal:
+        privacy_policy: 'Политика конфиденциальности'
+        terms_of_use: 'Условия использования'
+        legal_notices: 'Правовые уведомления'
+        gdpr: 'GDPR'
+    copyright: 'Все права защищены. Специалисты по финансовой и коммерческой аналитике.'
+
+home:
+    title: 'DATAUEMOA - Портал финансовых данных'
+    welcome: 'Добро пожаловать в DATAUEMOA'

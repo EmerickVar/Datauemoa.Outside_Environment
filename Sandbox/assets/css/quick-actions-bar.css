@@ -1,0 +1,240 @@
+/* QuickActionsBar */
+.QuickActionsBar {
+	position: fixed;
+	bottom: 30px;
+	right: 30px;
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+	z-index: 9999;
+}
+
+.QuickActionsBar-item {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 55px;
+	height: 55px;
+	box-sizing: border-box; /* Incluye el borde dentro de las dimensiones */
+	background-color: #171414;
+	border: 2px solid #2a2a2a;
+	border-radius: 15px;
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+	cursor: pointer;
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	position: relative;
+	overflow: hidden;
+}
+
+/* Efecto hover */
+.QuickActionsBar-item:hover {
+	transform: translateY(-5px);
+	border-color: #27b0f4;
+	box-shadow: 0 12px 25px rgba(200, 4, 70, 0.2);
+}
+
+.QuickActionsBar-item:active {
+	transform: scale(0.95) translateY(-5px);
+}
+
+/* Iconos */
+.QuickActionsBar-item i {
+	font-size: 22px;
+	color: #fff;
+	transition: all 0.3s ease;
+	z-index: 2;
+}
+
+.QuickActionsBar-item:hover i {
+	color: #27b0f4;
+	transform: scale(1.1);
+}
+
+/* Estilo especial para el botón toggle */
+.QuickActionsBar-item.toggle-qab {
+	background-color: #27b0f4;
+	border-color: #27b0f4;
+	transform: scale(1.1);
+}
+
+.QuickActionsBar-item.toggle-qab:hover {
+	background-color: #009be9;
+	border-color: #009be9;
+	transform: scale(1.15) translateY(-5px);
+}
+
+.QuickActionsBar-item.toggle-qab i {
+	color: #fff;
+	transition: all 0.3s ease;
+}
+
+.QuickActionsBar-item.toggle-qab:hover i {
+	color: #fff;
+	transform: scale(1.2) rotate(180deg);
+}
+
+/* Estados de transición para elementos ocultos */
+.QuickActionsBar-item[hidden] {
+	display: none !important;
+}
+
+/* Badge de notificación */
+.QuickActionsBar-badge {
+	position: absolute;
+	top: -2px;
+	right: -2px;
+	min-width: 22px;
+	height: 22px;
+	background-color: #27b0f4;
+	color: #fff;
+	font-size: 0.75rem;
+	font-weight: 600;
+	padding: 2px 6px;
+	border-radius: 8px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 4px 8px rgba(200, 4, 70, 0.3);
+	border: 2px solid #171414;
+	transition: all 0.3s ease;
+}
+
+.QuickActionsBar-item:hover .QuickActionsBar-badge {
+	transform: scale(1.1);
+}
+
+/* Tooltip personalizado */
+.QuickActionsBar-item::before {
+	content: attr(data-tooltip);
+	position: absolute;
+	right: calc(100% + 15px);
+	top: 50%;
+	transform: translateY(-50%) scale(0.8);
+	background-color: #171414;
+	color: #fff;
+	padding: 8px 12px;
+	border-radius: 8px;
+	font-size: 0.85rem;
+	white-space: nowrap;
+	opacity: 0;
+	visibility: hidden;
+	transition: all 0.3s ease;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+	border: 1px solid #2a2a2a;
+	z-index: 10;
+}
+
+.QuickActionsBar-item:hover::before {
+	opacity: 1;
+	visibility: visible;
+	transform: translateY(-50%) scale(1);
+}
+
+/* Efecto de ripple mejorado */
+.QuickActionsBar-item::after {
+	content: '';
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background: radial-gradient(circle, rgba(39, 176, 244, 0.2) 0%, transparent 70%);
+	transform: scale(0);
+	opacity: 0;
+	transition: all 0.6s ease;
+	border-radius: 15px;
+}
+
+.QuickActionsBar-item:active::after {
+	transform: scale(2.5);
+	opacity: 1;
+	transition: 0s;
+}
+
+/* Efecto ripple especial para el toggle */
+.QuickActionsBar-item.toggle-qab::after {
+	background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+}
+
+/* Variantes de botones */
+.QuickActionsBar-item.primary {
+	background-color: #27b0f4;
+	border-color: transparent;
+}
+
+.QuickActionsBar-item.primary:hover {
+	background-color: #009be9;
+}
+
+.QuickActionsBar-item.primary i {
+	color: #fff;
+}
+
+.QuickActionsBar-item.primary:hover i {
+	color: #fff;
+}
+
+/* Animación de entrada */
+@keyframes slideIn {
+	from {
+		opacity: 0;
+		transform: translateX(30px);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+.QuickActionsBar-item {
+	animation: slideIn 0.3s ease forwards;
+	animation-delay: calc(var(--item-index) * 0.1s);
+	opacity: 0;
+}
+
+/* Animación de pulsación para el toggle */
+@keyframes pulse {
+	0% {
+		transform: scale(1.1);
+	}
+	50% {
+		transform: scale(1.2);
+	}
+	100% {
+		transform: scale(1.1);
+	}
+}
+
+.QuickActionsBar-item.toggle-qab:active {
+	animation: pulse 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+	.QuickActionsBar {
+		bottom: 20px;
+		right: 20px;
+		gap: 12px;
+	}
+
+	.QuickActionsBar-item {
+		width: 48px;
+		height: 48px;
+		box-sizing: border-box; /* Mantener consistencia en móviles */
+	}
+
+	.QuickActionsBar-item i {
+		font-size: 20px;
+	}
+
+	/* Ocultar tooltip en móviles */
+	.QuickActionsBar-item::before {
+		display: none;
+	}
+
+	.QuickActionsBar-item.toggle-qab {
+		transform: scale(1.05);
+	}
+
+	.QuickActionsBar-item.toggle-qab:hover {
+		transform: scale(1.1) translateY(-3px);
+	}
+}

@@ -1,0 +1,653 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+	[Mockup] DATA UEMOA - Portal de Datos Financieros y Empresariales
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<style>
+		/* Bootstrap 4 Missing Utility Classes */
+		.mr-1 {
+			margin-right: 0.25rem !important;
+		}
+		.mr-2 {
+			margin-right: 0.5rem !important;
+		}
+		.ml-auto {
+			margin-left: auto !important;
+		}
+		.shadow-custom {
+			box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+		}
+		.bg-primary-custom {
+			background-color: var(--primary-blue) !important;
+		}
+		.text-primary-custom {
+			color: var(--primary-blue) !important;
+		}
+		.btn-primary-custom {
+			background-color: var(--primary-blue);
+			border-color: var(--primary-blue);
+			color: white;
+		}
+		.btn-primary-custom:hover {
+			background-color: var(--secondary-blue);
+			border-color: var(--secondary-blue);
+			color: white;
+		}
+		.input-group-append {
+			display: flex;
+		}
+
+		.cursor-pointer {
+			cursor: pointer;
+		}
+
+		.cursor-pointer:hover {
+			background-color: rgba(37, 99, 235, 0.05) !important;
+		}
+
+		.ticker-section {
+			background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+			padding: 20px 0;
+			box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+		}
+
+		.ticker-item {
+			color: white;
+			font-weight: 500;
+			text-align: center;
+			margin-bottom: 10px;
+		}
+
+		.ticker-label {
+			font-size: 14px;
+			opacity: 0.9;
+			display: block;
+		}
+
+		.ticker-value {
+			font-size: 18px;
+			font-weight: bold;
+			display: block;
+		}
+
+		.ticker-change {
+			font-size: 12px;
+			padding: 2px 6px;
+			border-radius: 4px;
+			background: rgba(255, 255, 255, 0.2);
+			display: inline-block;
+			margin-top: 5px;
+		}
+
+		.ticker-change.positive {
+			color: #4ade80;
+		}
+
+		.market-card {
+			border: none;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+			transition: transform 0.2s ease, box-shadow 0.2s ease;
+			margin-bottom: 30px;
+		}
+
+		.market-card:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+		}
+
+		.market-card .card-header {
+			background: var(--gray-50);
+			border-bottom: 2px solid var(--primary-blue);
+			font-weight: 600;
+			color: var(--gray-800);
+		}
+
+		.table-borderless td,
+		.table-borderless th {
+			border: 0;
+			padding: 0.75rem 0.5rem;
+		}
+
+		.table-hover tbody tr:hover {
+			background-color: var(--light-blue);
+		}
+
+		.flag-icon {
+			width: 20px;
+			height: auto;
+			border-radius: 2px;
+			margin-right: 8px;
+		}
+
+		.positive {
+			color: var(--success-green);
+			font-weight: 500;
+		}
+
+		.negative {
+			color: var(--danger-red);
+			font-weight: 500;
+		}
+
+		.news-card {
+			transition: transform 0.2s ease, box-shadow 0.2s ease;
+			border: none;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		}
+
+		.news-card:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+		}
+
+		.news-meta {
+			font-size: 12px;
+			color: var(--gray-600);
+		}
+
+		.news-source {
+			height: 20px;
+			width: auto;
+		}
+
+		.figure-card {
+			text-align: center;
+			padding: 25px 15px;
+			border: 1px solid var(--primary-blue);
+			border-radius: 8px;
+			background: white;
+			transition: all 0.3s ease;
+			margin-bottom: 20px;
+		}
+
+		.figure-card:hover {
+			border-color: var(--secondary-blue);
+			transform: translateY(-3px);
+			box-shadow: 0 6px 20px rgba(37, 99, 235, 0.15);
+		}
+
+		.figure-icon {
+			font-size: 2.5rem;
+			margin-bottom: 15px;
+		}
+
+		.figure-number {
+			font-size: 1.8rem;
+			font-weight: bold;
+			color: var(--primary-blue);
+			margin-bottom: 8px;
+		}
+
+		.figure-label {
+			font-size: 14px;
+			color: var(--gray-600);
+		}
+
+		.service-card {
+			padding: 25px;
+			border: 1px solid var(--primary-blue);
+			border-radius: 8px;
+			background: white;
+			margin-bottom: 20px;
+			transition: all 0.3s ease;
+		}
+
+		.service-card:hover {
+			border-color: var(--secondary-blue);
+			box-shadow: 0 6px 20px rgba(37, 99, 235, 0.15);
+		}
+
+		.chart-placeholder {
+			display: flex;
+			align-items: flex-end;
+			gap: 8px;
+			height: 80px;
+		}
+
+		.chart-bar {
+			flex: 1;
+			background: linear-gradient(to top, var(--primary-blue), var(--secondary-blue));
+			border-radius: 4px 4px 0 0;
+			min-height: 20px;
+		}
+
+		.section-link {
+			color: var(--primary-blue);
+			text-decoration: none;
+			font-weight: 500;
+			font-size: 14px;
+		}
+
+		.section-link:hover {
+			color: var(--secondary-blue);
+			text-decoration: underline;
+		}
+
+		.hero-section {
+			background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+			color: white;
+			padding: 60px 0;
+			text-align: center;
+		}
+
+		.hero-title {
+			font-size: 3rem;
+			font-weight: bold;
+			margin-bottom: 20px;
+		}
+
+		.hero-subtitle {
+			font-size: 1.2rem;
+			opacity: 0.9;
+			margin-bottom: 30px;
+		}
+
+		@media(max-width: 768px) {
+			.hero-title {
+				font-size: 2rem;
+			}
+
+			.hero-subtitle {
+				font-size: 1rem;
+			}
+		}
+	</style>
+{% endblock %}
+
+{% block body %}
+	<!-- Live Ticker Section -->
+	<section class="ticker-section">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4">
+					<div class="ticker-item">
+						<span class="ticker-label">EUR/USD</span>
+						<span class="ticker-value">➤ 1.14755</span>
+						<span class="ticker-change positive">+0.0009%</span>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="ticker-item">
+						<span class="ticker-label">APPLE</span>
+						<span class="ticker-value">➤ 196.035</span>
+						<span class="ticker-change positive">+0.0005%</span>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="ticker-item">
+						<span class="ticker-label">GOLD/USD</span>
+						<span class="ticker-value">➤ 3370.79</span>
+						<span class="ticker-change positive">+0.0009%</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Main Content -->
+	<div
+		class="container mt-4">
+		<!-- Market Data Sections -->
+		<div
+			class="row">
+			<!-- Currencies Section -->
+			<div class="col-lg-4 col-md-6 mb-4">
+				<div class="card market-card h-100">
+					<div class="card-header">
+						<h5 class="mb-0">
+							<i class="fas fa-coins mr-2"></i>Monedas</h5>
+					</div>
+					<div class="card-body p-0">
+						<div class="table-responsive">
+							<table class="table table-hover table-borderless mb-0">
+								<thead class="bg-light">
+									<tr>
+										<th scope="col">País</th>
+										<th scope="col">Precio</th>
+										<th scope="col">Cambio</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr class="cursor-pointer" onclick="window.location.href='{{ path('app_currencies_pair', {'from': 'EUR', 'to': 'USD'}) }}'">
+										<td>
+											<img src="https://flagcdn.com/w20/eu.png" alt="EU" class="flag-icon">
+											<small>EUR/USD</small>
+										</td>
+										<td>
+											<strong>➤ 1.14715</strong>
+										</td>
+										<td>
+											<span class="positive">0.0009%</span>
+										</td>
+									</tr>
+									<tr class="cursor-pointer" onclick="window.location.href='{{ path('app_currencies_pair', {'from': 'GBP', 'to': 'USD'}) }}'">
+										<td>
+											<img src="https://flagcdn.com/w20/gb.png" alt="GB" class="flag-icon">
+											<small>GBP/USD</small>
+										</td>
+										<td>
+											<strong>➤ 1.34312</strong>
+										</td>
+										<td>
+											<span class="positive">0.0007%</span>
+										</td>
+									</tr>
+									<tr class="cursor-pointer" onclick="window.location.href='{{ path('app_currencies_pair', {'from': 'USD', 'to': 'JPY'}) }}'">
+										<td>
+											<img src="https://flagcdn.com/w20/us.png" alt="US" class="flag-icon">
+											<small>USD/JPY</small>
+										</td>
+										<td>
+											<strong>➤ 145.692</strong>
+										</td>
+										<td>
+											<span class="positive">0.0004%</span>
+										</td>
+									</tr>
+									<tr class="cursor-pointer" onclick="window.location.href='{{ path('app_currencies_pair', {'from': 'EUR', 'to': 'XOF'}) }}'">
+										<td>
+											<img src="https://flagcdn.com/w20/bf.png" alt="XOF" class="flag-icon">
+											<small>EUR/XOF</small>
+										</td>
+										<td>
+											<strong>➤ 655.957</strong>
+										</td>
+										<td>
+											<span class="positive">0.0012%</span>
+										</td>
+									</tr>
+									<tr class="cursor-pointer" onclick="window.location.href='{{ path('app_currencies_pair', {'from': 'USD', 'to': 'XOF'}) }}'">
+										<td>
+											<img src="https://flagcdn.com/w20/us.png" alt="US" class="flag-icon">
+											<small>USD/XOF</small>
+										</td>
+										<td>
+											<strong>➤ 572.50</strong>
+										</td>
+										<td>
+											<span class="negative">-0.0008%</span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="card-footer bg-white border-top-0">
+						<a href="{{ path('app_currencies') }}" class="section-link">Ver todas las monedas →</a>
+					</div>
+				</div>
+			</div>
+
+			<!-- Economic Calendar -->
+			<div class="col-lg-4 col-md-6 mb-4">
+				<div class="card market-card h-100">
+					<div class="card-header">
+						<h5 class="mb-0">
+							<i class="fas fa-calendar-alt mr-2"></i>Calendario Económico</h5>
+					</div>
+					<div class="card-body p-0">
+						<div class="table-responsive">
+							<table class="table table-hover table-borderless mb-0">
+								<thead class="bg-light">
+									<tr>
+										<th scope="col">País</th>
+										<th scope="col">Evento</th>
+										<th scope="col">Valor</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>
+											<img src="https://flagcdn.com/w20/jp.png" alt="JP" class="flag-icon">
+											<small>19:50</small>
+										</td>
+										<td>
+											<small>IPC Mensual</small>
+										</td>
+										<td>
+											<strong>3.000</strong>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<img src="https://flagcdn.com/w20/my.png" alt="MY" class="flag-icon">
+											<small>00:00</small>
+										</td>
+										<td>
+											<small>Balanza Comercial</small>
+										</td>
+										<td>
+											<strong>16.400</strong>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<img src="https://flagcdn.com/w20/gb.png" alt="GB" class="flag-icon">
+											<small>19:01</small>
+										</td>
+										<td>
+											<small>Índice PMI</small>
+										</td>
+										<td>
+											<strong>-20.000</strong>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="card-footer bg-white border-top-0">
+						<a href="#" class="section-link">Ver calendario completo →</a>
+					</div>
+				</div>
+			</div>
+
+			<!-- Market Overview -->
+			<div class="col-lg-4 col-md-12 mb-4">
+				<div class="card market-card h-100">
+					<div class="card-header">
+						<h5 class="mb-0">
+							<i class="fas fa-chart-line mr-2"></i>Mercado en Tiempo Real</h5>
+					</div>
+					<div class="card-body p-0">
+						<div class="table-responsive">
+							<table class="table table-hover table-borderless mb-0">
+								<thead class="bg-light">
+									<tr>
+										<th scope="col">Empresa</th>
+										<th scope="col">Precio</th>
+										<th scope="col">Cambio</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>
+											<strong>Nvidia</strong><br><small>NVDA</small>
+										</td>
+										<td>
+											<strong>➤ 145.064</strong>
+										</td>
+										<td>
+											<span class="positive">0.0007%</span>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<strong>Microsoft</strong><br><small>MSFT</small>
+										</td>
+										<td>
+											<strong>➤ 480.779</strong>
+										</td>
+										<td>
+											<span class="positive">0.0002%</span>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<strong>Apple</strong><br><small>AAPL</small>
+										</td>
+										<td>
+											<strong>➤ 196.044</strong>
+										</td>
+										<td>
+											<span class="positive">0.0005%</span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="card-footer bg-white border-top-0">
+						<a href="#" class="section-link">Ver todas las acciones →</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- News Section -->
+		<div class="row mt-4">
+			<div class="col-12">
+				<div class="card shadow-custom">
+					<div class="card-header bg-primary-custom text-white">
+						<h4 class="mb-0">
+							<i class="fas fa-newspaper mr-2"></i>Últimas Noticias</h4>
+					</div>
+					<div class="card-body">
+						<div class="row">
+							<div class="col-lg-4 col-md-6 mb-3">
+								<div class="card news-card h-100">
+									<div class="card-body">
+										<div class="d-flex justify-content-between align-items-center mb-2">
+											<small class="news-meta">hace 2 horas</small>
+											<img src="https://wsrv.nl/?url=https://s3.polygon.io/public/assets/news/logos/globenewswire.svg&width=40" alt="Source" class="news-source">
+										</div>
+										<h6 class="card-title">Hexagon AB, Carl Zeiss AG lideran el sector de la metrología industrial</h6>
+										<p class="card-text small">Informe de evaluación de empresas para 2025 con más de 100 actores...</p>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-4 col-md-6 mb-3">
+								<div class="card news-card h-100">
+									<div class="card-body">
+										<div class="d-flex justify-content-between align-items-center mb-2">
+											<small class="news-meta">hace 2 horas</small>
+											<img src="https://wsrv.nl/?url=https://s3.polygon.io/public/assets/news/logos/globenewswire.svg&width=40" alt="Source" class="news-source">
+										</div>
+										<h6 class="card-title">Mercado mundial de baterías de iones de sodio 2026-2036</h6>
+										<p class="card-text small">El mercado superará los 30,000 millones de dólares en 2036...</p>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-4 col-md-12 mb-3">
+								<div class="card news-card h-100">
+									<div class="card-body">
+										<div class="d-flex justify-content-between align-items-center mb-2">
+											<small class="news-meta">hace 3 horas</small>
+											<img src="https://wsrv.nl/?url=https://s3.polygon.io/public/assets/news/logos/investing.png&width=40" alt="Source" class="news-source">
+										</div>
+										<h6 class="card-title">Los valores de la energía solar sufren caída</h6>
+										<p class="card-text small">Al proponerse recortes presupuestarios en el sector energético...</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="text-center mt-3">
+							<a href="#" class="btn btn-primary-custom">Ver todas las noticias</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Key Figures Section -->
+		<div class="row mt-5">
+			<div class="col-12">
+				<h3 class="text-center mb-4 text-primary-custom">Nuestras Cifras Clave</h3>
+				<div class="row">
+					<div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+						<div class="figure-card">
+							<div class="figure-icon">🏢</div>
+							<div class="figure-number">266M</div>
+							<div class="figure-label">Establecimientos</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+						<div class="figure-card">
+							<div class="figure-icon">🤝</div>
+							<div class="figure-number">131M</div>
+							<div class="figure-label">Proveedores</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+						<div class="figure-card">
+							<div class="figure-icon">📊</div>
+							<div class="figure-number">12B</div>
+							<div class="figure-label">Datos</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+						<div class="figure-card">
+							<div class="figure-icon">📰</div>
+							<div class="figure-number">683K</div>
+							<div class="figure-label">Noticias</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+						<div class="figure-card">
+							<div class="figure-icon">👥</div>
+							<div class="figure-number">388M</div>
+							<div class="figure-label">Gestores</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+						<div class="figure-card">
+							<div class="figure-icon">💰</div>
+							<div class="figure-number">44T</div>
+							<div class="figure-label">Valoración</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Services Section -->
+		<div class="row mt-5">
+			<div class="col-12">
+				<h3 class="text-center mb-4 text-primary-custom">Explore el mundo de los negocios como nunca antes</h3>
+				<div class="row">
+					<div class="col-lg-6 mb-4">
+						<div class="service-card">
+							<h5>
+								<i class="fas fa-search mr-2 text-primary-custom"></i>Búsqueda de Empresas</h5>
+							<p>Encuentre empresas en un abrir y cerrar de ojos gracias a nuestro potente motor de búsqueda. Obtén información clave sobre su actividad, tamaño, ubicación y mucho más.</p>
+							<div class="input-group">
+								<input type="text" class="form-control" placeholder="Buscar empresas...">
+								<div class="input-group-append">
+									<button class="btn btn-primary-custom" type="button">
+										<i class="fas fa-search"></i>
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-6 mb-4">
+						<div class="service-card">
+							<h5>
+								<i class="fas fa-chart-bar mr-2 text-primary-custom"></i>Mapa Ejecutivo</h5>
+							<p>Descubra fácilmente quiénes son los líderes y los responsables de la toma de decisiones en las empresas con nuestro mapeo de liderazgo.</p>
+							<div class="chart-placeholder mt-3">
+								<div class="chart-bar" style="height: 60%"></div>
+								<div class="chart-bar" style="height: 80%"></div>
+								<div class="chart-bar" style="height: 40%"></div>
+								<div class="chart-bar" style="height: 90%"></div>
+								<div class="chart-bar" style="height: 70%"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+language_selector:
+    choose_language: '选择语言'
+
+navbar:
+    home: '首页'
+    markets: '市场'
+    currencies: '货币'
+    stocks: '股票'
+    cryptocurrencies: '加密货币'
+    metals: '金属'
+    companies: '公司'
+    countries: '国家'
+    news: '新闻'
+    api: 'API'
+
+footer:
+    about_title: '关于 DATAUEMOA'
+    about_description: '领先的金融和商业数据门户，为战略决策提供准确的信息和实时分析。'
+    services_title: '服务'
+    services:
+        financial_markets: '金融市场'
+        business_data: '商业数据'
+        risk_analysis: '风险分析'
+        api_integration: 'API 和集成'
+    markets_title: '市场'
+    support_title: '支持'
+    support:
+        help_assistance: '帮助和支持'
+        api_documentation: 'API 文档'
+        developer_center: '开发者中心'
+        service_status: '服务状态'
+    legal_title: '法律'
+    legal:
+        privacy_policy: '隐私政策'
+        terms_of_use: '使用条款'
+        legal_notices: '法律声明'
+        gdpr: 'GDPR'
+    copyright: '版权所有。金融和商业智能专家。'
+
+home:
+    title: 'DATAUEMOA - 金融数据门户'
+    welcome: '欢迎来到 DATAUEMOA'

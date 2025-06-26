@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html
+	lang="{{ app.request.locale }}">
+	<head>
+		<meta
+			charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0" />
+		<title>
+			{% block title %}
+				{{ 'home.title'|trans }}
+			{% endblock %}
+		</title>
+		<link
+			rel="icon"
+			href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>📊</text></svg>" />
+
+		<!-- Bootstrap 4.5.3 CSS -->
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+			integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2"
+			crossorigin="anonymous" />
+
+		<!-- Font Awesome 5.15.4 -->
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+			integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+			crossorigin="anonymous"
+			referrerpolicy="no-referrer" />
+
+		<!-- RemixIcon -->
+		<link
+			href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.min.css"
+			rel="stylesheet" />
+
+		<!-- Component Styles -->
+		<link
+			rel="stylesheet"
+			href="{{ asset('css/quick-actions-bar.css') }}" />
+
+		{% block stylesheets %}
+		<style>
+			:root {
+				--primary-blue: #2563eb;
+				--secondary-blue: #1d4ed8;
+				--light-blue: #dbeafe;
+				--dark-blue: #1e40af;
+				--success-green: #059669;
+				--danger-red: #dc2626;
+				--warning-yellow: #f59e0b;
+				--gray-50: #f9fafb;
+				--gray-100: #f3f4f6;
+				--gray-200: #e5e7eb;
+				--gray-300: #d1d5db;
+				--gray-400: #9ca3af;
+				--gray-500: #6b7280;
+				--gray-600: #4b5563;
+				--gray-700: #374151;
+				--gray-800: #1f2937;
+				--gray-900: #111827;
+				--font-family-sans-serif: 'Poppins',
+					-apple-system,
+					BlinkMacSystemFont,
+					'Segoe UI',
+					Roboto,
+					'Helvetica Neue',
+					Arial,
+					sans-serif;
+				--font-family-monospace: Menlo,
+					Monaco,
+					Consolas,
+					'Liberation Mono',
+					'Courier New',
+					monospace;
+			}
+
+			body {
+				font-family: 'Segoe UI',
+					Tahoma,
+					Geneva,
+					Verdana,
+					sans-serif;
+				background-color: var(
+					--gray-50
+				);
+				color: var(
+					--gray-800
+				);
+				line-height: 1.6;
+			}
+
+			/* Custom Bootstrap Navbar */
+			.navbar-custom {
+				background: linear-gradient(
+					135deg,
+					var(
+							--primary-blue
+						)
+						0%,
+					var(
+							--secondary-blue
+						)
+						100%
+				);
+				box-shadow: 0
+					2px
+					10px
+					rgba(
+						37,
+						99,
+						235,
+						0.2
+					);
+				padding: 1rem
+					0;
+			}
+
+			.navbar-brand {
+				font-size: 1.8rem;
+				font-weight: bold;
+				color: white !important;
+				text-decoration: none;
+			}
+
+			.navbar-nav
+				.nav-link {
+				color: rgba(
+					255,
+					255,
+					255,
+					0.9
+				) !important;
+				font-weight: 500;
+				margin: 0
+					0.5rem;
+				transition: all
+					0.3s
+					ease;
+			}
+
+			.navbar-nav
+				.nav-link:hover {
+				color: white !important;
+				background-color: rgba(
+					255,
+					255,
+					255,
+					0.1
+				);
+				border-radius: 5px;
+			}
+
+			.navbar-toggler {
+				border: none;
+				background: rgba(
+					255,
+					255,
+					255,
+					0.1
+				);
+			}
+
+			.navbar-toggler-icon {
+				background-image: url("data:image/svg+xml, %3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+			}
+
+			/* Footer Styles */
+			.footer-custom {
+				background: var(
+					--gray-900
+				);
+				color: var(
+					--gray-300
+				);
+				padding: 3rem
+					0
+					1rem;
+				margin-top: 4rem;
+			}
+
+			.footer-custom
+				h6 {
+				color: white;
+				font-weight: 600;
+				margin-bottom: 1rem;
+			}
+
+			.footer-custom
+				a {
+				color: var(
+					--gray-400
+				);
+				text-decoration: none;
+				transition: color
+					0.3s
+					ease;
+			}
+
+			.footer-custom
+				a:hover {
+				color: white;
+				text-decoration: none;
+			}
+
+			.social-links
+				a {
+				display: inline-block;
+				width: 40px;
+				height: 40px;
+				line-height: 40px;
+				text-align: center;
+				background: var(
+					--primary-blue
+				);
+				color: white;
+				border-radius: 50%;
+				margin: 0
+					0.25rem;
+				transition: all
+					0.3s
+					ease;
+			}
+
+			.social-links
+				a:hover {
+				background: var(
+					--secondary-blue
+				);
+				transform: translateY(
+					-2px
+				);
+			}
+
+			.copyright {
+				border-top: 1px
+					solid
+					var(
+						--gray-700
+					);
+				padding-top: 1rem;
+				margin-top: 2rem;
+				text-align: center;
+				color: var(
+					--gray-500
+				);
+			}
+
+			/* Utility Classes */
+			.text-primary-custom {
+				color: var(
+					--primary-blue
+				) !important;
+			}
+
+			.bg-primary-custom {
+				background-color: var(
+					--primary-blue
+				) !important;
+			}
+
+			.btn-primary-custom {
+				background-color: var(
+					--primary-blue
+				);
+				border-color: var(
+					--primary-blue
+				);
+				color: white;
+			}
+
+			.btn-primary-custom:hover {
+				background-color: var(
+					--secondary-blue
+				);
+				border-color: var(
+					--secondary-blue
+				);
+				color: white;
+			}
+
+			.shadow-custom {
+				box-shadow: 0
+					0.5rem
+					1rem
+					rgba(
+						0,
+						0,
+						0,
+						0.1
+					) !important;
+			}
+
+			/* Animations */
+			.fade-in {
+				animation: fadeIn
+					0.5s
+					ease-in-out;
+			}
+
+			@keyframes fadeIn {
+				from {
+					opacity: 0;
+					transform: translateY(
+						20px
+					);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(
+						0
+					);
+				}
+			}
+
+			/* Bootstrap 4 Missing Utility Classes */
+			.mr-1 {
+				margin-right: 0.25rem !important;
+			}
+			.mr-2 {
+				margin-right: 0.5rem !important;
+			}
+			.ml-auto {
+				margin-left: auto !important;
+			}
+			.input-group-append {
+				display: flex;
+			}
+
+			/* Responsive adjustments */
+			@media (max-width: 768px) {
+				.navbar-brand {
+					font-size: 1.5rem;
+				}
+				
+				.navbar-nav {
+					width: 100%;
+				}
+				
+				.language-selector {
+					margin-top: 1rem;
+					margin-left: 0;
+				}
+			}
+		</style>
+		{% endblock %}
+
+		<!-- Bootstrap 4.5.3 JavaScript and dependencies -->
+		<script
+			src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+			integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+			crossorigin="anonymous"></script>
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+			crossorigin="anonymous"></script>
+
+		{% block javascripts %}
+			{% block importmap %}
+				{{ importmap( 'app' ) }}
+			{% endblock %}
+		{% endblock %}
+	</head>
+	<body>
+		<!-- Navigation -->
+		<nav
+			class="navbar navbar-expand-lg navbar-custom">
+			<div
+				class="container">
+				<a
+					class="navbar-brand"
+					href="{{
+						path(
+							'app_home', {'_locale': app.request.locale}
+						)
+					}}">
+					<i
+						class="fas fa-chart-line mr-2"></i
+					>[Mockup]
+					DATA
+					UEMOA
+				</a>
+
+				<button
+					class="navbar-toggler"
+					type="button"
+					data-toggle="collapse"
+					data-target="#navbarNav"
+					aria-controls="navbarNav"
+					aria-expanded="false"
+					aria-label="Toggle navigation">
+					<span
+						class="navbar-toggler-icon"></span>
+				</button>
+
+				<div
+					class="collapse navbar-collapse"
+					id="navbarNav">
+					<ul
+						class="navbar-nav mr-auto">
+						<li
+							class="nav-item">
+							<a
+								class="nav-link"
+								href="{{
+									path(
+										'app_home', {'_locale': app.request.locale}
+									)
+								}}">
+								<i
+									class="fas fa-home mr-1"></i
+								>{{ 'navbar.home'|trans }}
+							</a>
+						</li>
+						<li
+							class="nav-item dropdown">
+							<a
+								class="nav-link dropdown-toggle"
+								href="#"
+								id="mercadosDropdown"
+								role="button"
+								data-toggle="dropdown"
+								aria-haspopup="true"
+								aria-expanded="false">
+								<i
+									class="fas fa-chart-area mr-1"></i
+								>{{ 'navbar.markets'|trans }}
+							</a>
+							<div
+								class="dropdown-menu"
+								aria-labelledby="mercadosDropdown">
+								<a
+									class="dropdown-item"
+									href="#"
+									>{{ 'navbar.currencies'|trans }}</a
+								>
+								<a
+									class="dropdown-item"
+									href="#"
+									>{{ 'navbar.stocks'|trans }}</a
+								>
+								<a
+									class="dropdown-item"
+									href="#"
+									>{{ 'navbar.cryptocurrencies'|trans }}</a
+								>
+								<a
+									class="dropdown-item"
+									href="#"
+									>{{ 'navbar.metals'|trans }}</a
+								>
+							</div>
+						</li>
+						<li
+							class="nav-item">
+							<a
+								class="nav-link"
+								href="#">
+								<i
+									class="fas fa-building mr-1"></i
+								>{{ 'navbar.companies'|trans }}
+							</a>
+						</li>
+						<li
+							class="nav-item">
+							<a
+								class="nav-link"
+								href="#">
+								<i
+									class="fas fa-globe mr-1"></i
+								>{{ 'navbar.countries'|trans }}
+							</a>
+						</li>
+						<li
+							class="nav-item">
+							<a
+								class="nav-link"
+								href="#">
+								<i
+									class="fas fa-newspaper mr-1"></i
+								>{{ 'navbar.news'|trans }}
+							</a>
+						</li>
+						<li
+							class="nav-item">
+							<a
+								class="nav-link"
+								href="#">
+								<i
+									class="fas fa-code mr-1"></i
+								>{{ 'navbar.api'|trans }}
+							</a>
+						</li>
+					</ul>
+					
+					<!-- Language Selector -->
+					{% include 'components/language_selector.html.twig' %}
+				</div>
+			</div>
+		</nav>
+
+		<!-- Main Content -->
+		{% block body %}
+			
+		{% endblock %}
+
+		<!-- Footer -->
+		<footer
+			class="footer-custom">
+			<div
+				class="container">
+				<div
+					class="row">
+					<div
+						class="col-lg-4 col-md-6 mb-4">
+						<h6>
+							{{ 'footer.about_title'|trans }}
+						</h6>
+						<p>
+							{{ 'footer.about_description'|trans }}
+						</p>
+						<div
+							class="social-links">
+							<a
+								href="#"
+								title="Twitter">
+								<i
+									class="fab fa-twitter"></i>
+							</a>
+							<a
+								href="#"
+								title="LinkedIn">
+								<i
+									class="fab fa-linkedin-in"></i>
+							</a>
+							<a
+								href="#"
+								title="Android App">
+								<i
+									class="fab fa-android"></i>
+							</a>
+							<a
+								href="#"
+								title="iOS App">
+								<i
+									class="fab fa-apple"></i>
+							</a>
+						</div>
+					</div>
+					<div
+						class="col-lg-2 col-md-6 mb-4">
+						<h6>
+							{{ 'footer.services_title'|trans }}
+						</h6>
+						<ul
+							class="list-unstyled">
+							<li>
+								<a
+									href="#"
+									>{{ 'footer.services.financial_markets'|trans }}</a
+								>
+							</li>
+							<li>
+								<a
+									href="#"
+									>{{ 'footer.services.business_data'|trans }}</a
+								>
+							</li>
+							<li>
+								<a
+									href="#"
+									>{{ 'footer.services.risk_analysis'|trans }}</a
+								>
+							</li>
+							<li>
+								<a
+									href="#"
+									>{{ 'footer.services.api_integration'|trans }}</a
+								>
+							</li>
+						</ul>
+					</div>
+					<div
+						class="col-lg-2 col-md-6 mb-4">
+						<h6>
+							{{ 'footer.markets_title'|trans }}
+						</h6>
+						<ul
+							class="list-unstyled">
+							<li>
+								<a
+									href="#"
+									>{{ 'navbar.currencies'|trans }}</a
+								>
+							</li>
+							<li>
+								<a
+									href="#"
+									>{{ 'navbar.stocks'|trans }}</a
+								>
+							</li>
+							<li>
+								<a
+									href="#"
+									>{{ 'navbar.cryptocurrencies'|trans }}</a
+								>
+							</li>
+							<li>
+								<a
+									href="#"
+									>{{ 'navbar.metals'|trans }}</a
+								>
+							</li>
+						</ul>
+					</div>
+					<div
+						class="col-lg-2 col-md-6 mb-4">
+						<h6>
+							{{ 'footer.support_title'|trans }}
+						</h6>
+						<ul
+							class="list-unstyled">
+							<li>
+								<a
+									href="#"
+									>{{ 'footer.support.help_assistance'|trans }}</a
+								>
+							</li>
+							<li>
+								<a
+									href="#"
+									>{{ 'footer.support.api_documentation'|trans }}</a
+								>
+							</li>
+							<li>
+								<a
+									href="#"
+									>{{ 'footer.support.developer_center'|trans }}</a
+								>
+							</li>
+							<li>
+								<a
+									href="#"
+									>{{ 'footer.support.service_status'|trans }}</a
+								>
+							</li>
+						</ul>
+					</div>
+					<div
+						class="col-lg-2 col-md-6 mb-4">
+						<h6>
+							{{ 'footer.legal_title'|trans }}
+						</h6>
+						<ul
+							class="list-unstyled">
+							<li>
+								<a
+									href="#"
+									>{{ 'footer.legal.privacy_policy'|trans }}</a
+								>
+							</li>
+							<li>
+								<a
+									href="#"
+									>{{ 'footer.legal.terms_of_use'|trans }}</a
+								>
+							</li>
+							<li>
+								<a
+									href="#"
+									>{{ 'footer.legal.legal_notices'|trans }}</a
+								>
+							</li>
+							<li>
+								<a
+									href="#"
+									>{{ 'footer.legal.gdpr'|trans }}</a
+								>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div
+					class="copyright">
+					<p>
+						&copy;
+						{{ "now"|date("Y") }}
+						DATA UEMOA - {{ 'footer.copyright'|trans }}
+					</p>
+				</div>
+			</div>
+		</footer>
+
+		<!-- Quick Actions Bar Component -->
+		{% include 'tools/QuickActionsBar.html.twig' %}
+
+		<script
+			src="{{ asset('js/QuickActionsBar.js') }}"
+		>
+		</script>
+	</body>
+</html>

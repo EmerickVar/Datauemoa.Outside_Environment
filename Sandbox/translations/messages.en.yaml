@@ -1,0 +1,45 @@
+language_selector:
+    choose_language: 'Choose Language'
+
+navbar:
+    home: 'Home'
+    markets: 'Markets'
+    currencies: 'Currencies'
+    stocks: 'Stocks'
+    cryptocurrencies: 'Cryptocurrencies'
+    metals: 'Metals'
+    companies: 'Companies'
+    countries: 'Countries'
+    news: 'News'
+    api: 'API'
+
+footer:
+    about_title: 'About DATAUEMOA'
+    about_description:
+        'Leading portal for financial and business data, providing accurate information and real-time analysis for
+        strategic decision making.'
+    services_title: 'Services'
+    services:
+        financial_markets: 'Financial Markets'
+        business_data: 'Business Data'
+        risk_analysis: 'Risk Analysis'
+        api_integration: 'API & Integration'
+    markets_title: 'Markets'
+    support_title: 'Support'
+    support:
+        help_assistance: 'Help & Assistance'
+        api_documentation: 'API Documentation'
+        developer_center: 'Developer Center'
+        service_status: 'Service Status'
+    legal_title: 'Legal'
+    legal:
+        privacy_policy: 'Privacy Policy'
+        terms_of_use: 'Terms of Use'
+        legal_notices: 'Legal Notices'
+        gdpr: 'GDPR'
+    copyright: 'All rights reserved. Financial and business intelligence specialists.'
+
+home:
+    title: 'DATAUEMOA - Financial Data Portal'
+    welcome: 'Welcome to DATAUEMOA'
+

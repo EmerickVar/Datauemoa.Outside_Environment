@@ -1,0 +1,156 @@
+<div class="language-selector dropdown">
+    <button 
+        class="btn btn-outline-light btn-sm dropdown-toggle language-btn" 
+        type="button" 
+        id="languageDropdown" 
+        data-toggle="dropdown" 
+        aria-haspopup="true" 
+        aria-expanded="false">
+        <i class="fas fa-globe mr-1" aria-hidden="true"></i>
+        {% set current_locale = app.request.locale %}
+        {% set locale_names = {
+            'fr': 'FR',
+            'en': 'EN', 
+            'es': 'ES',
+            'zh': 'ZH',
+            'ar': 'AR',
+            'ru': 'RU'
+        } %}
+        {{ locale_names[current_locale] ?? 'FR' }}
+    </button>
+    <div class="dropdown-menu dropdown-menu-right language-menu" aria-labelledby="languageDropdown">
+        <h6 class="dropdown-header">
+            <i class="fas fa-language mr-1" aria-hidden="true"></i>
+            {{ 'language_selector.choose_language'|trans }}
+        </h6>
+        {% set languages = [
+            { code: 'fr', name: 'Français', flag: '🇫🇷' },
+            { code: 'en', name: 'English', flag: '🇺🇸' },
+            { code: 'es', name: 'Español', flag: '🇪🇸' },
+            { code: 'zh', name: '中文', flag: '🇨🇳' },
+            { code: 'ar', name: 'العربية', flag: '🇸🇦' },
+            { code: 'ru', name: 'Русский', flag: '🇷🇺' }
+        ] %}
+        
+        {% for language in languages %}
+            <a class="dropdown-item language-item {% if current_locale == language.code %}active{% endif %}" 
+               href="{{ path('app_change_locale', {'_locale': current_locale, 'locale': language.code}) }}"
+               data-locale="{{ language.code }}">
+                <span class="flag-icon">{{ language.flag }}</span>
+                <span class="language-name">{{ language.name }}</span>
+                {% if current_locale == language.code %}
+                    <i class="fas fa-check text-success ml-auto" aria-hidden="true"></i>
+                {% endif %}
+            </a>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+.language-selector {
+    margin-left: auto;
+}
+
+.language-btn {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.875rem;
+    padding: 0.375rem 0.75rem;
+    min-width: 60px;
+    transition: all 0.3s ease;
+}
+
+.language-btn:hover,
+.language-btn:focus {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.language-menu {
+    min-width: 200px;
+    padding: 0.5rem 0;
+    border: none;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    background: white;
+}
+
+.language-menu .dropdown-header {
+    color: var(--gray-700);
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0.5rem 1rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.language-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    color: var(--gray-700);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.language-item:hover {
+    background-color: var(--gray-100);
+    color: var(--primary-blue);
+    text-decoration: none;
+    transform: translateX(2px);
+}
+
+.language-item.active {
+    background-color: var(--light-blue);
+    color: var(--primary-blue);
+    font-weight: 600;
+}
+
+.language-item.active:hover {
+    background-color: var(--light-blue);
+}
+
+.flag-icon {
+    font-size: 1.2rem;
+    margin-right: 0.75rem;
+    min-width: 24px;
+}
+
+.language-name {
+    flex: 1;
+    font-weight: 500;
+}
+
+.language-item .fas.fa-check {
+    font-size: 0.8rem;
+    margin-left: auto;
+}
+
+/* RTL Support for Arabic */
+.language-item[data-locale="ar"] .language-name {
+    direction: rtl;
+    text-align: right;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .language-selector {
+        margin-left: 0.5rem;
+    }
+    
+    .language-btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.8rem;
+        min-width: 50px;
+    }
+    
+    .language-menu {
+        min-width: 180px;
+    }
+}
+</style>

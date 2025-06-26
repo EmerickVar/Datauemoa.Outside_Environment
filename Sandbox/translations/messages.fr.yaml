@@ -1,0 +1,44 @@
+language_selector:
+    choose_language: 'Choisir la langue'
+
+navbar:
+    home: 'Accueil'
+    markets: 'Marchés'
+    currencies: 'Devises'
+    stocks: 'Actions'
+    cryptocurrencies: 'Cryptomonnaies'
+    metals: 'Métaux'
+    companies: 'Entreprises'
+    countries: 'Pays'
+    news: 'Actualités'
+    api: 'API'
+
+footer:
+    about_title: 'À propos de DATAUEMOA'
+    about_description:
+        'Portail leader en données financières et commerciales, fournissant des informations précises et des analyses en
+        temps réel pour la prise de décisions stratégiques.'
+    services_title: 'Services'
+    services:
+        financial_markets: 'Marchés financiers'
+        business_data: 'Données commerciales'
+        risk_analysis: 'Analyse des risques'
+        api_integration: 'API et intégration'
+    markets_title: 'Marchés'
+    support_title: 'Support'
+    support:
+        help_assistance: 'Aide et assistance'
+        api_documentation: 'Documentation API'
+        developer_center: 'Centre développeurs'
+        service_status: 'État du service'
+    legal_title: 'Légal'
+    legal:
+        privacy_policy: 'Politique de confidentialité'
+        terms_of_use: "Conditions d'utilisation"
+        legal_notices: 'Mentions légales'
+        gdpr: 'RGPD'
+    copyright: 'Tous droits réservés. Spécialistes en intelligence financière et commerciale.'
+
+home:
+    title: 'DATAUEMOA - Portail de données financières'
+    welcome: 'Bienvenue sur DATAUEMOA'
