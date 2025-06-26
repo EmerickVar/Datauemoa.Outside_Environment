@@ -1,210 +1,345 @@
-/* QuickActionsBar */
+/**
+ * ====================================================================
+ * COMPOSANT QUICKACTIONSBAR - BARRE D'ACTIONS RAPIDES
+ * ====================================================================
+ * 
+ * Barre d'actions flottante positionnée en bas à droite de l'écran
+ * offrant un accès rapide aux fonctionnalités principales de l'application.
+ * 
+ * Fonctionnalités :
+ * - Bouton toggle pour afficher/masquer les actions
+ * - Effet ripple sur les interactions
+ * - Tooltips informatifs
+ * - Design responsive
+ * - Animations fluides et modernes
+ * 
+ * @author   DataUEMOA Team
+ * @license  Propietaire
+ * @version  1.0.0
+ * @since    2025-06-26
+ */
+
+/**
+ * CONTENEUR PRINCIPAL - QuickActionsBar
+ * ====================================
+ * 
+ * Conteneur principal de la barre d'actions rapides.
+ * Positionné de manière fixe en bas à droite de l'écran.
+ * Utilise Flexbox pour organiser les éléments en colonne.
+ */
 .QuickActionsBar {
-	position: fixed;
-	bottom: 30px;
-	right: 30px;
-	display: flex;
-	flex-direction: column;
-	gap: 15px;
-	z-index: 9999;
+	position: fixed;          /* Position fixe par rapport à la fenêtre */
+	bottom: 30px;            /* Distance depuis le bas de l'écran */
+	right: 30px;             /* Distance depuis le bord droit */
+	display: flex;           /* Conteneur flexible pour l'alignement */
+	flex-direction: column;  /* Organisation verticale des éléments */
+	gap: 15px;              /* Espacement uniforme entre les boutons */
+	z-index: 9999;          /* Priorité d'affichage maximale */
 }
 
+/**
+ * ÉLÉMENTS D'ACTION - QuickActionsBar-item
+ * =======================================
+ * 
+ * Boutons individuels de la barre d'actions rapides.
+ * Chaque bouton est stylisé avec un design moderne incluant :
+ * - Ombres portées pour la profondeur
+ * - Transitions fluides pour les interactions
+ * - Effets de survol et d'activation
+ */
 .QuickActionsBar-item {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 55px;
-	height: 55px;
-	box-sizing: border-box; /* Incluye el borde dentro de las dimensiones */
-	background-color: #171414;
-	border: 2px solid #2a2a2a;
-	border-radius: 15px;
-	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-	cursor: pointer;
-	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-	position: relative;
-	overflow: hidden;
+	display: flex;                                        /* Conteneur flexible pour centrer le contenu */
+	align-items: center;                                  /* Centrage vertical du contenu */
+	justify-content: center;                              /* Centrage horizontal du contenu */
+	width: 55px;                                         /* Largeur fixe du bouton */
+	height: 55px;                                        /* Hauteur fixe du bouton */
+	box-sizing: border-box;                              /* Inclut bordures et padding dans les dimensions */
+	background-color: #171414;                           /* Couleur de fond sombre */
+	border: 2px solid #2a2a2a;                          /* Bordure subtile gris foncé */
+	border-radius: 15px;                                 /* Coins arrondis modernes */
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);         /* Ombre portée pour la profondeur */
+	cursor: pointer;                                     /* Curseur interactif au survol */
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Transition fluide avec courbe de Bézier */
+	position: relative;                                  /* Position relative pour les pseudo-éléments */
+	overflow: hidden;                                    /* Masque les débordements pour l'effet ripple */
 }
 
-/* Efecto hover */
+/**
+ * EFFETS DE SURVOL - États interactifs
+ * ===================================
+ * 
+ * Définit les animations et transformations lors du survol des boutons.
+ * Crée une expérience utilisateur immersive avec des transitions fluides.
+ */
+
+/* État de survol - Élévation et changement de couleur */
 .QuickActionsBar-item:hover {
-	transform: translateY(-5px);
-	border-color: #27b0f4;
-	box-shadow: 0 12px 25px rgba(200, 4, 70, 0.2);
+	transform: translateY(-5px);                          /* Soulève le bouton de 5px */
+	border-color: #27b0f4;                               /* Change la couleur de bordure (bleu) */
+	box-shadow: 0 12px 25px rgba(200, 4, 70, 0.2);     /* Intensifie l'ombre portée */
 }
 
+/* État d'activation - Effet de pression */
 .QuickActionsBar-item:active {
-	transform: scale(0.95) translateY(-5px);
+	transform: scale(0.95) translateY(-5px);             /* Réduit légèrement la taille + élévation */
 }
 
-/* Iconos */
+/**
+ * ICÔNES - Stylisation des éléments Font Awesome
+ * =============================================
+ * 
+ * Configuration des icônes affichées dans chaque bouton d'action.
+ * Gère la taille, couleur et animations des icônes.
+ */
+
+/* Style de base des icônes */
 .QuickActionsBar-item i {
-	font-size: 22px;
-	color: #fff;
-	transition: all 0.3s ease;
-	z-index: 2;
+	font-size: 22px;                    /* Taille des icônes Font Awesome */
+	color: #fff;                        /* Couleur blanche par défaut */
+	transition: all 0.3s ease;         /* Transition fluide pour toutes les propriétés */
+	z-index: 2;                         /* Priorité d'affichage au-dessus des effets */
 }
 
+/* Effet de survol sur les icônes */
 .QuickActionsBar-item:hover i {
-	color: #27b0f4;
-	transform: scale(1.1);
+	color: #27b0f4;                     /* Change la couleur vers le bleu */
+	transform: scale(1.1);              /* Agrandit légèrement l'icône */
 }
 
-/* Estilo especial para el botón toggle */
+/**
+ * BOUTON TOGGLE - Stylisation spéciale du bouton d'activation
+ * ==========================================================
+ * 
+ * Le bouton toggle (.toggle-qab) possède un style distinctif pour le
+ * différencier des autres boutons d'action. Il sert à afficher/masquer
+ * les autres éléments de la barre d'actions.
+ */
+
+/* Style de base du bouton toggle */
 .QuickActionsBar-item.toggle-qab {
-	background-color: #27b0f4;
-	border-color: #27b0f4;
-	transform: scale(1.1);
+	background-color: #27b0f4;                           /* Fond bleu distinctif */
+	border-color: #27b0f4;                               /* Bordure assortie au fond */
+	transform: scale(1.1);                               /* Légèrement plus grand que les autres */
 }
 
+/* Effet de survol du bouton toggle */
 .QuickActionsBar-item.toggle-qab:hover {
-	background-color: #009be9;
-	border-color: #009be9;
-	transform: scale(1.15) translateY(-5px);
+	background-color: #009be9;                           /* Bleu plus foncé au survol */
+	border-color: #009be9;                               /* Bordure assortie */
+	transform: scale(1.15) translateY(-5px);             /* Agrandissement + élévation */
 }
 
+/* Icône du bouton toggle */
 .QuickActionsBar-item.toggle-qab i {
-	color: #fff;
-	transition: all 0.3s ease;
+	color: #fff;                                         /* Couleur blanche fixe */
+	transition: all 0.3s ease;                          /* Transition fluide */
 }
 
+/* Effet de rotation de l'icône au survol */
 .QuickActionsBar-item.toggle-qab:hover i {
-	color: #fff;
-	transform: scale(1.2) rotate(180deg);
+	color: #fff;                                         /* Maintient la couleur blanche */
+	transform: scale(1.2) rotate(180deg);               /* Agrandissement + rotation complète */
 }
 
-/* Estados de transición para elementos ocultos */
+/**
+ * GESTION DE VISIBILITÉ - États cachés des éléments
+ * ================================================
+ * 
+ * Contrôle l'affichage/masquage des éléments de la barre d'actions.
+ * Utilisé en conjonction avec JavaScript pour les animations toggle.
+ */
+
+/* Masquage forcé des éléments avec attribut hidden */
 .QuickActionsBar-item[hidden] {
-	display: none !important;
+	display: none !important;                            /* Masque complètement l'élément */
 }
 
-/* Badge de notificación */
+/**
+ * BADGES DE NOTIFICATION - Indicateurs visuels
+ * ===========================================
+ * 
+ * Petits badges circulaires affichés en haut à droite des boutons
+ * pour indiquer des notifications, compteurs ou alertes.
+ * Positionnés de manière absolue par rapport au bouton parent.
+ */
+
+/* Style de base du badge de notification */
 .QuickActionsBar-badge {
-	position: absolute;
-	top: -2px;
-	right: -2px;
-	min-width: 22px;
-	height: 22px;
-	background-color: #27b0f4;
-	color: #fff;
-	font-size: 0.75rem;
-	font-weight: 600;
-	padding: 2px 6px;
-	border-radius: 8px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	box-shadow: 0 4px 8px rgba(200, 4, 70, 0.3);
-	border: 2px solid #171414;
-	transition: all 0.3s ease;
+	position: absolute;                                  /* Position absolue par rapport au bouton */
+	top: -2px;                                          /* Décalage vers le haut */
+	right: -2px;                                        /* Décalage vers la droite */
+	min-width: 22px;                                    /* Largeur minimale pour les petits nombres */
+	box-sizing: border-box;                             /* Inclut bordures et padding dans les dimensions */
+	background-color: #27b0f4;                          /* Fond bleu distinctif */
+	color: #fff;                                        /* Texte blanc */
+	font-size: 0.75rem;                                 /* Taille de police réduite */
+	font-weight: 600;                                   /* Texte semi-gras */
+	padding: 2px 6px;                                   /* Espacement interne */
+	border-radius: 8px;                                 /* Coins arrondis */
+	display: flex;                                      /* Conteneur flexible */
+	align-items: center;                                /* Centrage vertical */
+	justify-content: center;                            /* Centrage horizontal */
+	box-shadow: 0 4px 8px rgba(200, 4, 70, 0.3);      /* Ombre portée subtile */
+	border: 2px solid #171414;                          /* Bordure contrastante */
+	transition: all 0.3s ease;                         /* Transition fluide */
 }
 
+/* Effet de survol sur le badge */
 .QuickActionsBar-item:hover .QuickActionsBar-badge {
-	transform: scale(1.1);
+	transform: scale(1.1);                              /* Agrandissement léger au survol */
 }
 
-/* Tooltip personalizado */
+/**
+ * TOOLTIPS PERSONNALISÉS - Infobulles informatives
+ * ===============================================
+ * 
+ * Infobulles apparaissant au survol des boutons d'action.
+ * Positionnées à gauche du bouton avec un design moderne.
+ * Utilisent l'attribut data-tooltip pour le contenu textuel.
+ */
+
+/* Style de base des tooltips (pseudo-élément ::before) */
 .QuickActionsBar-item::before {
-	content: attr(data-tooltip);
-	position: absolute;
-	right: calc(100% + 15px);
-	top: 50%;
-	transform: translateY(-50%) scale(0.8);
-	background-color: #171414;
-	color: #fff;
-	padding: 8px 12px;
-	border-radius: 8px;
-	font-size: 0.85rem;
-	white-space: nowrap;
-	opacity: 0;
-	visibility: hidden;
-	transition: all 0.3s ease;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-	border: 1px solid #2a2a2a;
-	z-index: 10;
+	content: attr(data-tooltip);                        /* Contenu depuis l'attribut data-tooltip */
+	position: absolute;                                 /* Position absolue par rapport au bouton */
+	right: calc(100% + 15px);                          /* Position à gauche avec espacement */
+	top: 50%;                                           /* Centrage vertical */
+	transform: translateY(-50%) scale(0.8);             /* Centrage + réduction initiale */
+	background-color: #171414;                          /* Fond sombre */
+	color: #fff;                                        /* Texte blanc */
+	padding: 8px 12px;                                  /* Espacement interne */
+	border-radius: 8px;                                 /* Coins arrondis */
+	font-size: 0.85rem;                                 /* Taille de police réduite */
+	white-space: nowrap;                                /* Empêche le retour à la ligne */
+	opacity: 0;                                         /* Invisible par défaut */
+	visibility: hidden;                                 /* Masqué par défaut */
+	transition: all 0.3s ease;                         /* Transition fluide */
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);        /* Ombre portée */
+	border: 1px solid #2a2a2a;                         /* Bordure subtile */
+	z-index: 10;                                        /* Priorité d'affichage élevée */
 }
 
+/* Affichage du tooltip au survol */
 .QuickActionsBar-item:hover::before {
-	opacity: 1;
-	visibility: visible;
-	transform: translateY(-50%) scale(1);
+	opacity: 1;                                         /* Rend visible */
+	visibility: visible;                                /* Affiche l'élément */
+	transform: translateY(-50%) scale(1);               /* Taille normale */
 }
 
-/* Efecto de ripple mejorado */
+/**
+ * EFFET RIPPLE - Animation de cercles concentriques
+ * ================================================
+ * 
+ * Effet visuel moderne créant une ondulation lors du clic sur un bouton.
+ * Utilise le pseudo-élément ::after pour créer l'animation.
+ * L'effet simule une onde qui se propage depuis le point de clic.
+ */
+
+/* Configuration de base de l'effet ripple */
 .QuickActionsBar-item::after {
-	content: '';
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	background: radial-gradient(circle, rgba(39, 176, 244, 0.2) 0%, transparent 70%);
-	transform: scale(0);
-	opacity: 0;
-	transition: all 0.6s ease;
-	border-radius: 15px;
+	content: '';                                        /* Pseudo-élément vide */
+	position: absolute;                                 /* Position absolue dans le bouton */
+	width: 100%;                                        /* Couvre toute la largeur */
+	height: 100%;                                       /* Couvre toute la hauteur */
+	background: radial-gradient(circle, rgba(39, 176, 244, 0.2) 0%, transparent 70%); /* Dégradé radial bleu */
+	transform: scale(0);                                /* Taille initiale nulle */
+	opacity: 0;                                         /* Invisible par défaut */
+	transition: all 0.6s ease;                         /* Transition longue pour l'effet */
+	border-radius: 15px;                                /* Coins arrondis assortis au bouton */
 }
 
+/* Activation de l'effet ripple au clic */
 .QuickActionsBar-item:active::after {
-	transform: scale(2.5);
-	opacity: 1;
-	transition: 0s;
+	transform: scale(2.5);                              /* Agrandissement significatif */
+	opacity: 1;                                         /* Devient visible */
+	transition: 0s;                                     /* Transition instantanée pour l'activation */
 }
 
-/* Efecto ripple especial para el toggle */
+/* Effet ripple spécialisé pour le bouton toggle */
 .QuickActionsBar-item.toggle-qab::after {
-	background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+	background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%); /* Dégradé blanc */
 }
 
-/* Variantes de botones */
+/**
+ * VARIANTES DE BOUTONS - Styles alternatifs
+ * ========================================
+ * 
+ * Définit des styles alternatifs pour différents types de boutons.
+ * La variante 'primary' est utilisée pour les actions principales
+ * comme le bouton "Retour en haut".
+ */
+
+/* Style principal - Bouton primaire */
 .QuickActionsBar-item.primary {
-	background-color: #27b0f4;
-	border-color: transparent;
+	background-color: #27b0f4;                          /* Fond bleu principal */
+	border-color: transparent;                          /* Bordure transparente */
 }
 
+/* Effet de survol du bouton primaire */
 .QuickActionsBar-item.primary:hover {
-	background-color: #009be9;
+	background-color: #009be9;                          /* Bleu plus foncé au survol */
 }
 
+/* Couleur des icônes dans le bouton primaire */
 .QuickActionsBar-item.primary i {
-	color: #fff;
+	color: #fff;                                        /* Icône blanche */
 }
 
+/* Maintien de la couleur blanche au survol */
 .QuickActionsBar-item.primary:hover i {
-	color: #fff;
+	color: #fff;                                        /* Conserve la couleur blanche */
 }
 
-/* Animación de entrada */
+/**
+ * ANIMATIONS - Définitions d'animations CSS
+ * ========================================
+ * 
+ * Ensemble d'animations réutilisables pour créer des effets visuels
+ * fluides et professionnels lors de l'apparition et interaction
+ * avec les éléments de la barre d'actions.
+ */
+
+/**
+ * Animation slideIn - Entrée en glissement
+ * Fait apparaître les éléments avec un glissement depuis la droite
+ */
 @keyframes slideIn {
 	from {
-		opacity: 0;
-		transform: translateX(30px);
+		opacity: 0;                                     /* Début invisible */
+		transform: translateX(30px);                    /* Décalage initial vers la droite */
 	}
 	to {
-		opacity: 1;
-		transform: translateX(0);
+		opacity: 1;                                     /* Devient visible */
+		transform: translateX(0);                       /* Position finale normale */
 	}
 }
 
+/* Application de l'animation d'entrée aux boutons */
 .QuickActionsBar-item {
-	animation: slideIn 0.3s ease forwards;
-	animation-delay: calc(var(--item-index) * 0.1s);
-	opacity: 0;
+	animation: slideIn 0.3s ease forwards;             /* Animation de 0.3s avec maintien de l'état final */
+	animation-delay: calc(var(--item-index) * 0.1s);   /* Délai calculé selon l'index CSS */
+	opacity: 0;                                         /* État initial invisible */
 }
 
-/* Animación de pulsación para el toggle */
+/**
+ * Animation pulse - Effet de pulsation
+ * Animation de mise à l'échelle pour créer un effet de pulsation
+ */
 @keyframes pulse {
 	0% {
-		transform: scale(1.1);
+		transform: scale(1.1);                          /* Taille initiale légèrement agrandie */
 	}
 	50% {
-		transform: scale(1.2);
+		transform: scale(1.2);                          /* Agrandissement maximal */
 	}
 	100% {
-		transform: scale(1.1);
+		transform: scale(1.1);                          /* Retour à la taille initiale */
 	}
 }
 
+/* Application de l'animation pulse au bouton toggle lors du clic */
 .QuickActionsBar-item.toggle-qab:active {
-	animation: pulse 0.3s ease;
+	animation: pulse 0.3s ease;                         /* Animation de pulsation de 0.3s */
 }
 
 /* Responsive */
