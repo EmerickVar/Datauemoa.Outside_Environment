@@ -27,3 +27,104 @@
         <i class="fa fa-arrow-up"></i>
     </button>
 </div>
+
+<!-- ====================================================================
+     MODAL DE COMPARTIR - MÓDULO SHARE
+     ====================================================================
+     
+     Modal interactivo que se despliega al hacer clic en el botón de compartir
+     de la QuickActionsBar. Permite compartir la página actual en diferentes
+     redes sociales y plataformas de mensajería.
+     
+     Funcionalidades:
+     - Compartir en Facebook (publicación, reel/story, messenger)
+     - Compartir en Instagram (publicación, chat, reel/story)
+     - Compartir en Telegram (chat, story)
+     - Compartir en Twitter/X
+     - Copiar enlace al portapapeles
+     - Cierre automático al hacer clic fuera del modal
+     
+     @author   DataUEMOA Team
+     @version  1.0.0
+     @since    2025-06-26
+-->
+<div class="share-modal-overlay" id="shareModalOverlay">
+    <div class="share-modal" id="shareModal">
+        <!-- Encabezado del modal con título descriptivo -->
+        <div class="share-modal-header">
+            <h3 class="share-modal-title">
+                <i class="fa fa-share-alt"></i>
+                {{ 'Compartir página'|trans }}
+            </h3>
+        </div>
+
+        <!-- Contenedor de opciones de compartir organizadas en grid -->
+        <div class="share-options">
+            <!-- Facebook - Publicación estándar -->
+            <div class="share-option facebook" data-platform="facebook" data-type="post">
+                <i class="fab fa-facebook-f"></i>
+                <span class="share-label">{{ 'Facebook'|trans }}</span>
+            </div>
+
+            <!-- Facebook - Reel/Story -->
+            <div class="share-option facebook" data-platform="facebook" data-type="story">
+                <i class="fab fa-facebook"></i>
+                <span class="share-label">{{ 'FB Story'|trans }}</span>
+            </div>
+
+            <!-- Facebook - Messenger -->
+            <div class="share-option messenger" data-platform="messenger" data-type="chat">
+                <i class="fab fa-facebook-messenger"></i>
+                <span class="share-label">{{ 'Messenger'|trans }}</span>
+            </div>
+
+            <!-- Instagram - Publicación estándar -->
+            <div class="share-option instagram" data-platform="instagram" data-type="post">
+                <i class="fab fa-instagram"></i>
+                <span class="share-label">{{ 'Instagram'|trans }}</span>
+            </div>
+
+            <!-- Instagram - Chat/DM -->
+            <div class="share-option instagram" data-platform="instagram" data-type="chat">
+                <i class="fab fa-instagram"></i>
+                <span class="share-label">{{ 'IG Chat'|trans }}</span>
+            </div>
+
+            <!-- Instagram - Reel/Story -->
+            <div class="share-option instagram" data-platform="instagram" data-type="story">
+                <i class="fab fa-instagram"></i>
+                <span class="share-label">{{ 'IG Story'|trans }}</span>
+            </div>
+
+            <!-- Telegram - Chat -->
+            <div class="share-option telegram" data-platform="telegram" data-type="chat">
+                <i class="fab fa-telegram-plane"></i>
+                <span class="share-label">{{ 'Telegram'|trans }}</span>
+            </div>
+
+            <!-- Telegram - Story -->
+            <div class="share-option telegram" data-platform="telegram" data-type="story">
+                <i class="fab fa-telegram"></i>
+                <span class="share-label">{{ 'TG Story'|trans }}</span>
+            </div>
+
+            <!-- Twitter/X - Publicación -->
+            <div class="share-option twitter" data-platform="twitter" data-type="post">
+                <i class="fab fa-x-twitter"></i>
+                <span class="share-label">{{ 'Twitter/X'|trans }}</span>
+            </div>
+
+            <!-- Copiar enlace al portapapeles -->
+            <div class="share-option copy-link" data-platform="clipboard" data-type="copy">
+                <i class="fa fa-copy"></i>
+                <span class="share-label">{{ 'Copiar link'|trans }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Notificación de copia exitosa -->
+<div class="copy-notification" id="copyNotification">
+    <i class="fa fa-check"></i>
+    {{ 'Enlace copiado al portapapeles'|trans }}
+</div>

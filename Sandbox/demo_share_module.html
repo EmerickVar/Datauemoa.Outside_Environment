@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0" />
+		<title>Prueba del Módulo Share - DataUEMOA</title>
+		<meta
+			name="description"
+			content="Página de prueba para el módulo de compartir en redes sociales de DataUEMOA" />
+
+		<!-- Font Awesome para los íconos -->
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+		<!-- Estilos de la QuickActionsBar -->
+		<link
+			rel="stylesheet"
+			href="../assets/css/quick-actions-bar.css" />
+
+		<style>
+			/* Estilos básicos para la página de prueba */
+			body {
+				font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+				background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+				color: #fff;
+				margin: 0;
+				padding: 40px 20px;
+				min-height: 100vh;
+			}
+
+			.container {
+				max-width: 800px;
+				margin: 0 auto;
+				text-align: center;
+			}
+
+			h1 {
+				color: #27b0f4;
+				margin-bottom: 30px;
+				font-size: 2.5rem;
+			}
+
+			.demo-content {
+				background: rgba(255, 255, 255, 0.1);
+				padding: 30px;
+				border-radius: 15px;
+				margin: 30px 0;
+				backdrop-filter: blur(10px);
+			}
+
+			.instructions {
+				text-align: left;
+				margin: 20px 0;
+			}
+
+			.instructions li {
+				margin: 10px 0;
+				padding: 10px;
+				background: rgba(39, 176, 244, 0.1);
+				border-radius: 5px;
+				border-left: 3px solid #27b0f4;
+			}
+
+			.info-box {
+				background: rgba(16, 185, 129, 0.1);
+				border: 1px solid #10b981;
+				border-radius: 10px;
+				padding: 20px;
+				margin: 20px 0;
+			}
+
+			.warning-box {
+				background: rgba(245, 158, 11, 0.1);
+				border: 1px solid #f59e0b;
+				border-radius: 10px;
+				padding: 20px;
+				margin: 20px 0;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h1>🚀 Módulo Share - DataUEMOA</h1>
+
+			<div class="demo-content">
+				<h2>Página de Demostración</h2>
+				<p>Esta es una página de prueba para el <strong>Módulo Share</strong> de la QuickActionsBar.</p>
+				<p>
+					Utiliza la barra de acciones rápidas en la esquina inferior derecha para probar la funcionalidad de
+					compartir.
+				</p>
+			</div>
+
+			<div class="info-box">
+				<h3>📋 Instrucciones de Uso</h3>
+				<ol class="instructions">
+					<li>
+						<strong>Activar la barra:</strong> Haz clic en el botón azul con el ícono de rayo (⚡) en la
+						esquina inferior derecha
+					</li>
+					<li>
+						<strong>Abrir modal de compartir:</strong> Haz clic en el botón de compartir (ícono de share)
+					</li>
+					<li>
+						<strong>Probar las opciones:</strong> Prueba cada botón de red social para ver cómo funciona
+					</li>
+					<li>
+						<strong>Copiar enlace:</strong> Usa el botón "Copiar link" para probar la funcionalidad de
+						portapapeles
+					</li>
+					<li><strong>Cerrar modal:</strong> Haz clic fuera del modal o presiona la tecla Escape</li>
+				</ol>
+			</div>
+
+			<div class="warning-box">
+				<h3>⚠️ Notas Importantes</h3>
+				<ul>
+					<li>
+						<strong>Facebook:</strong> Requiere una App ID válida para Messenger (actualmente usa
+						placeholder)
+					</li>
+					<li>
+						<strong>Instagram:</strong> No soporta partage directo via URL, copia el enlace y abre la app
+					</li>
+					<li>
+						<strong>Popups:</strong> Algunos navegadores pueden bloquear las ventanas popup, permite popups
+						para esta página
+					</li>
+					<li>
+						<strong>HTTPS:</strong> La función de copiar al portapapeles funciona mejor en conexiones
+						seguras
+					</li>
+				</ul>
+			</div>
+
+			<div class="demo-content">
+				<h3>🔧 Funcionalidades Implementadas</h3>
+				<div
+					style="
+						display: grid;
+						grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+						gap: 20px;
+						margin-top: 20px;
+					">
+					<div style="background: rgba(24, 119, 242, 0.1); padding: 15px; border-radius: 10px">
+						<i
+							class="fab fa-facebook"
+							style="color: #1877f2; font-size: 2rem"></i>
+						<h4>Facebook</h4>
+						<p>Publicación, Story, Messenger</p>
+					</div>
+					<div style="background: rgba(228, 64, 95, 0.1); padding: 15px; border-radius: 10px">
+						<i
+							class="fab fa-instagram"
+							style="color: #e4405f; font-size: 2rem"></i>
+						<h4>Instagram</h4>
+						<p>Publicación, Chat, Story</p>
+					</div>
+					<div style="background: rgba(0, 136, 204, 0.1); padding: 15px; border-radius: 10px">
+						<i
+							class="fab fa-telegram"
+							style="color: #0088cc; font-size: 2rem"></i>
+						<h4>Telegram</h4>
+						<p>Chat, Story</p>
+					</div>
+					<div style="background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 10px">
+						<i
+							class="fab fa-x-twitter"
+							style="color: #fff; font-size: 2rem"></i>
+						<h4>Twitter/X</h4>
+						<p>Tweet con hashtags</p>
+					</div>
+					<div style="background: rgba(16, 185, 129, 0.1); padding: 15px; border-radius: 10px">
+						<i
+							class="fa fa-copy"
+							style="color: #10b981; font-size: 2rem"></i>
+						<h4>Clipboard</h4>
+						<p>Copiar enlace</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- Contenido adicional para hacer scroll -->
+			<div
+				style="
+					height: 150vh;
+					background: rgba(255, 255, 255, 0.05);
+					margin: 40px 0;
+					border-radius: 15px;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				">
+				<div>
+					<h3>📏 Área de Scroll</h3>
+					<p>Desplázate hacia abajo para probar el botón "Ir arriba" que aparece cuando:</p>
+					<ul style="text-align: left; max-width: 400px">
+						<li>Has hecho scroll más de 300px</li>
+						<li>La QuickActionsBar está expandida</li>
+					</ul>
+					<div
+						style="
+							margin-top: 50px;
+							padding: 20px;
+							background: rgba(39, 176, 244, 0.1);
+							border-radius: 10px;
+						">
+						<h4>🎯 Prueba el Modal Share</h4>
+						<p>Vuelve arriba y prueba todas las funciones del módulo de compartir.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- QuickActionsBar HTML -->
+		<div class="QuickActionsBar">
+			<button
+				class="QuickActionsBar-item toggle-qab"
+				data-tooltip="¡Acciones rápidas!"
+				style="--item-index: 0">
+				<i class="fa fa-bolt"></i>
+			</button>
+
+			<button
+				class="QuickActionsBar-item"
+				data-tooltip="Tablero"
+				style="--item-index: 1"
+				hidden>
+				<i class="fa fa-tachometer-alt"></i>
+			</button>
+
+			<button
+				class="QuickActionsBar-item"
+				data-tooltip="Marcadores"
+				style="--item-index: 2"
+				hidden>
+				<i class="fa fa-bookmark"></i>
+			</button>
+
+			<button
+				class="QuickActionsBar-item"
+				data-tooltip="Compartir"
+				style="--item-index: 3"
+				hidden>
+				<i class="fa fa-share"></i>
+			</button>
+
+			<button
+				class="QuickActionsBar-item"
+				data-tooltip="Notificaciones"
+				style="--item-index: 4"
+				hidden>
+				<i class="fa fa-bell"></i>
+			</button>
+
+			<button
+				class="QuickActionsBar-item"
+				data-tooltip="API"
+				style="--item-index: 5"
+				hidden>
+				<i class="fa fa-code"></i>
+			</button>
+
+			<button
+				class="QuickActionsBar-item primary"
+				data-tooltip="¡Ir arriba!"
+				style="--item-index: 6"
+				onclick="scrollToTop()"
+				hidden>
+				<i class="fa fa-arrow-up"></i>
+			</button>
+		</div>
+
+		<!-- Modal de Compartir -->
+		<div
+			class="share-modal-overlay"
+			id="shareModalOverlay">
+			<div
+				class="share-modal"
+				id="shareModal">
+				<div class="share-modal-header">
+					<h3 class="share-modal-title">
+						<i class="fa fa-share-alt"></i>
+						Compartir página
+					</h3>
+				</div>
+
+				<div class="share-options">
+					<div
+						class="share-option facebook"
+						data-platform="facebook"
+						data-type="post">
+						<i class="fab fa-facebook-f"></i>
+						<span class="share-label">Facebook</span>
+					</div>
+
+					<div
+						class="share-option facebook"
+						data-platform="facebook"
+						data-type="story">
+						<i class="fab fa-facebook"></i>
+						<span class="share-label">FB Story</span>
+					</div>
+
+					<div
+						class="share-option messenger"
+						data-platform="messenger"
+						data-type="chat">
+						<i class="fab fa-facebook-messenger"></i>
+						<span class="share-label">Messenger</span>
+					</div>
+
+					<div
+						class="share-option instagram"
+						data-platform="instagram"
+						data-type="post">
+						<i class="fab fa-instagram"></i>
+						<span class="share-label">Instagram</span>
+					</div>
+
+					<div
+						class="share-option instagram"
+						data-platform="instagram"
+						data-type="chat">
+						<i class="fab fa-instagram"></i>
+						<span class="share-label">IG Chat</span>
+					</div>
+
+					<div
+						class="share-option instagram"
+						data-platform="instagram"
+						data-type="story">
+						<i class="fab fa-instagram"></i>
+						<span class="share-label">IG Story</span>
+					</div>
+
+					<div
+						class="share-option telegram"
+						data-platform="telegram"
+						data-type="chat">
+						<i class="fab fa-telegram-plane"></i>
+						<span class="share-label">Telegram</span>
+					</div>
+
+					<div
+						class="share-option telegram"
+						data-platform="telegram"
+						data-type="story">
+						<i class="fab fa-telegram"></i>
+						<span class="share-label">TG Story</span>
+					</div>
+
+					<div
+						class="share-option twitter"
+						data-platform="twitter"
+						data-type="post">
+						<i class="fab fa-x-twitter"></i>
+						<span class="share-label">Twitter/X</span>
+					</div>
+
+					<div
+						class="share-option copy-link"
+						data-platform="clipboard"
+						data-type="copy">
+						<i class="fa fa-copy"></i>
+						<span class="share-label">Copiar link</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Notificación de copia -->
+		<div
+			class="copy-notification"
+			id="copyNotification">
+			<i class="fa fa-check"></i>
+			Enlace copiado al portapapeles
+		</div>
+
+		<!-- JavaScript de la QuickActionsBar -->
+		<script src="../assets/js/QuickActionsBar.js"></script>
+	</body>
+</html>

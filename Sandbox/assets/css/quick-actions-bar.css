@@ -373,3 +373,371 @@
 		transform: scale(1.1) translateY(-3px);
 	}
 }
+
+/**
+ * ====================================================================
+ * MODAL DE COMPARTIR - MÓDULO SHARE
+ * ====================================================================
+ * 
+ * Modal interactivo para compartir contenido en redes sociales.
+ * Se despliega al hacer clic en el botón de compartir de la QuickActionsBar.
+ * 
+ * Funcionalidades :
+ * - Overlay con fondo semitransparente
+ * - Contenedor modal centrado y responsivo
+ * - Botones de redes sociales con íconos distintivos
+ * - Animaciones de entrada y salida fluidas
+ * - Cierre automático al hacer clic fuera del modal
+ * 
+ * @author   DataUEMOA Team
+ * @version  1.0.0
+ * @since    2025-06-26
+ */
+
+/**
+ * OVERLAY DEL MODAL - Fondo semitransparente
+ * ========================================
+ * 
+ * Capa de fondo que cubre toda la pantalla cuando el modal está activo.
+ * Proporciona un contexto visual y permite el cierre del modal al hacer clic.
+ */
+.share-modal-overlay {
+	position: fixed;                                     /* Posición fija que cubre toda la pantalla */
+	top: 0;                                             /* Desde el borde superior */
+	left: 0;                                            /* Desde el borde izquierdo */
+	width: 100%;                                        /* Ancho completo de la ventana */
+	height: 100%;                                       /* Alto completo de la ventana */
+	background-color: rgba(0, 0, 0, 0.7);              /* Fondo negro semitransparente */
+	backdrop-filter: blur(8px);                         /* Efecto de desenfoque del fondo */
+	display: flex;                                      /* Contenedor flexible para centrar el modal */
+	align-items: center;                                /* Centrado vertical */
+	justify-content: center;                            /* Centrado horizontal */
+	z-index: 10000;                                     /* Prioridad máxima sobre otros elementos */
+	opacity: 0;                                         /* Invisible por defecto */
+	visibility: hidden;                                 /* Oculto por defecto */
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Transición fluida de aparición */
+}
+
+/* Estado activo del overlay */
+.share-modal-overlay.active {
+	opacity: 1;                                         /* Visible cuando está activo */
+	visibility: visible;                                /* Mostrar cuando está activo */
+}
+
+/**
+ * CONTENEDOR PRINCIPAL DEL MODAL
+ * =============================
+ * 
+ * Contenedor central que alberga todos los botones de compartir.
+ * Diseño moderno con esquinas redondeadas y efectos de profundidad.
+ */
+.share-modal {
+	background-color: #171414;                          /* Fondo oscuro consistente con el tema */
+	border: 2px solid #2a2a2a;                         /* Borde sutil gris oscuro */
+	border-radius: 20px;                               /* Esquinas redondeadas modernas */
+	padding: 25px;                                      /* Espaciado interno generoso */
+	box-sizing: border-box;                             /* Incluye padding y border en el ancho */
+	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);       /* Sombra dramática para profundidad */
+	transform: scale(0.8) translateY(30px);            /* Estado inicial de animación */
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Transición fluida */
+	max-width: 400px;                                  /* Ancho máximo responsive */
+	width: 90%;                                        /* Ancho responsive en móviles */
+}
+
+/* Estado activo del modal */
+.share-modal-overlay.active .share-modal {
+	transform: scale(1) translateY(0);                  /* Animación de entrada completa */
+}
+
+/**
+ * ENCABEZADO DEL MODAL
+ * ===================
+ * 
+ * Título descriptivo del modal con iconografía contextual.
+ * Proporciona claridad sobre la funcionalidad del modal.
+ */
+.share-modal-header {
+	text-align: center;                                 /* Centrado del contenido */
+	margin-bottom: 20px;                               /* Espaciado inferior */
+	color: #fff;                                       /* Texto blanco */
+}
+
+.share-modal-title {
+	font-size: 1.4rem;                                 /* Tamaño de fuente del título */
+	font-weight: 600;                                  /* Texto semi-negrita */
+	margin: 0;                                         /* Sin márgenes por defecto */
+	display: flex;                                     /* Contenedor flexible */
+	align-items: center;                               /* Alineación vertical */
+	justify-content: center;                           /* Centrado horizontal */
+	gap: 10px;                                         /* Espacio entre ícono y texto */
+}
+
+.share-modal-title i {
+	color: #27b0f4;                                    /* Ícono en color azul distintivo */
+	font-size: 1.2rem;                                 /* Tamaño del ícono */
+}
+
+/**
+ * CONTENEDOR DE BOTONES DE REDES SOCIALES
+ * ======================================
+ * 
+ * Grid responsive que organiza los botones de compartir en una
+ * cuadrícula adaptable según el tamaño de pantalla.
+ */
+.share-options {
+	display: grid;                                      /* Layout de cuadrícula */
+	grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); /* Columnas adaptables */
+	gap: 15px;                                         /* Espaciado entre botones */
+	margin-top: 15px;                                  /* Margen superior */
+}
+
+/**
+ * BOTONES INDIVIDUALES DE REDES SOCIALES
+ * =====================================
+ * 
+ * Estilo individual de cada botón de red social con colores
+ * distintivos y efectos de interacción personalizados.
+ */
+.share-option {
+	display: flex;                                     /* Contenedor flexible */
+	flex-direction: column;                            /* Organización vertical */
+	align-items: center;                               /* Centrado horizontal */
+	justify-content: center;                           /* Centrado vertical */
+	padding: 15px 10px;                               /* Espaciado interno */
+	border: 2px solid transparent;                     /* Borde transparente inicial */
+	border-radius: 12px;                              /* Esquinas redondeadas */
+	background-color: #1f1f1f;                        /* Fondo gris oscuro */
+	cursor: pointer;                                   /* Cursor interactivo */
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Transición fluida */
+	position: relative;                                /* Posición relativa para efectos */
+	overflow: hidden;                                  /* Ocultar desbordamientos */
+	min-height: 80px;                                 /* Altura mínima consistente */
+}
+
+/* Efecto de hover genérico */
+.share-option:hover {
+	transform: translateY(-3px);                       /* Elevación ligera al hover */
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);       /* Sombra aumentada */
+}
+
+/* Ícono de las redes sociales */
+.share-option i {
+	font-size: 1.8rem;                                /* Tamaño del ícono */
+	margin-bottom: 8px;                               /* Espaciado inferior */
+	transition: all 0.3s ease;                        /* Transición del ícono */
+}
+
+/* Texto descriptivo del botón */
+.share-option .share-label {
+	font-size: 0.75rem;                               /* Texto pequeño descriptivo */
+	color: #ccc;                                      /* Color gris claro */
+	text-align: center;                               /* Centrado del texto */
+	font-weight: 500;                                 /* Peso medio del texto */
+	line-height: 1.2;                                 /* Altura de línea ajustada */
+}
+
+/**
+ * ESTILOS ESPECÍFICOS POR RED SOCIAL
+ * =================================
+ * 
+ * Cada botón tiene colores distintivos que representan
+ * la identidad visual de cada plataforma social.
+ */
+
+/* Facebook - Color azul distintivo */
+.share-option.facebook:hover {
+	border-color: #1877f2;                            /* Borde azul Facebook */
+	background-color: rgba(24, 119, 242, 0.1);       /* Fondo azul semitransparente */
+}
+
+.share-option.facebook:hover i {
+	color: #1877f2;                                   /* Ícono azul Facebook */
+}
+
+/* Facebook Messenger - Color azul degradado */
+.share-option.messenger:hover {
+	border-color: #00b2ff;                            /* Borde azul Messenger */
+	background-color: rgba(0, 178, 255, 0.1);        /* Fondo azul semitransparente */
+}
+
+.share-option.messenger:hover i {
+	color: #00b2ff;                                   /* Ícono azul Messenger */
+}
+
+/* Instagram - Gradiente distintivo */
+.share-option.instagram:hover {
+	border-color: #e4405f;                            /* Borde rosa Instagram */
+	background-color: rgba(228, 64, 95, 0.1);        /* Fondo rosa semitransparente */
+}
+
+.share-option.instagram:hover i {
+	color: #e4405f;                                   /* Ícono rosa Instagram */
+}
+
+/* Telegram - Color azul específico */
+.share-option.telegram:hover {
+	border-color: #0088cc;                            /* Borde azul Telegram */
+	background-color: rgba(0, 136, 204, 0.1);        /* Fondo azul semitransparente */
+}
+
+.share-option.telegram:hover i {
+	color: #0088cc;                                   /* Ícono azul Telegram */
+}
+
+/* Twitter/X - Color negro/blanco */
+.share-option.twitter:hover {
+	border-color: #000000;                            /* Borde negro X */
+	background-color: rgba(0, 0, 0, 0.2);            /* Fondo negro semitransparente */
+}
+
+.share-option.twitter:hover i {
+	color: #ffffff;                                   /* Ícono blanco X */
+}
+
+/* Copiar Link - Color verde */
+.share-option.copy-link:hover {
+	border-color: #10b981;                            /* Borde verde */
+	background-color: rgba(16, 185, 129, 0.1);       /* Fondo verde semitransparente */
+}
+
+.share-option.copy-link:hover i {
+	color: #10b981;                                   /* Ícono verde */
+}
+
+/**
+ * ANIMACIONES Y EFECTOS ESPECIALES
+ * ===============================
+ * 
+ * Animaciones adicionales para mejorar la experiencia del usuario.
+ */
+
+/* Efecto ripple para botones de compartir */
+.share-option::after {
+	content: '';                                      /* Pseudo-elemento vacío */
+	position: absolute;                               /* Posición absoluta */
+	width: 100%;                                      /* Ancho completo */
+	height: 100%;                                     /* Alto completo */
+	background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%); /* Gradiente radial */
+	transform: scale(0);                              /* Escala inicial */
+	opacity: 0;                                       /* Invisible por defecto */
+	transition: all 0.6s ease;                       /* Transición lenta */
+	border-radius: 12px;                              /* Esquinas redondeadas */
+}
+
+/* Activación del efecto ripple */
+.share-option:active::after {
+	transform: scale(2);                              /* Expansión del efecto */
+	opacity: 1;                                       /* Visible durante el clic */
+	transition: 0s;                                   /* Transición instantánea */
+}
+
+/**
+ * NOTIFICACIÓN DE COPIA EXITOSA
+ * ============================
+ * 
+ * Mensaje temporal que aparece cuando se copia el enlace.
+ */
+.copy-notification {
+	position: fixed;                                  /* Posición fija */
+	top: 20px;                                        /* Desde arriba */
+	left: 50%;                                        /* Centrado horizontal */
+	transform: translateX(-50%) translateY(-100px);   /* Posición inicial oculta */
+	background-color: #10b981;                        /* Fondo verde éxito */
+	color: white;                                     /* Texto blanco */
+	padding: 12px 20px;                              /* Espaciado interno */
+	border-radius: 8px;                              /* Esquinas redondeadas */
+	font-size: 0.9rem;                               /* Tamaño de fuente */
+	font-weight: 500;                                /* Peso del texto */
+	box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); /* Sombra verde */
+	z-index: 10001;                                  /* Prioridad máxima */
+	opacity: 0;                                      /* Invisible por défaut */
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Transición fluida */
+}
+
+/* Estado activo de la notificación */
+.copy-notification.show {
+	transform: translateX(-50%) translateY(0);        /* Animación de entrada */
+	opacity: 1;                                       /* Visible */
+}
+
+/**
+ * DISEÑO RESPONSIVE PARA MÓVILES
+ * =============================
+ * 
+ * Adaptaciones específicas para dispositivos móviles y tablets.
+ */
+@media (max-width: 768px) {
+	.share-modal {
+		padding: 20px;                                /* Padding reducido en móviles */
+		box-sizing: border-box;                       /* Incluye padding y border en el ancho */
+		margin: 20px;                                 /* Margen lateral en móviles */
+		max-width: none;                              /* Sin límite de ancho */
+		width: calc(100% - 40px);                     /* Ancho responsive con márgenes */
+	}
+
+	.share-options {
+		grid-template-columns: repeat(3, 1fr);        /* 3 columnas fijas en móviles */
+		gap: 12px;                                    /* Espaciado reducido */
+	}
+
+	.share-option {
+		padding: 12px 8px;                            /* Padding reducido */
+		min-height: 70px;                             /* Altura mínima reducida */
+	}
+
+	.share-option i {
+		font-size: 1.5rem;                            /* Íconos más pequeños */
+	}
+
+	.share-option .share-label {
+		font-size: 0.7rem;                            /* Texto más pequeño */
+	}
+
+	.share-modal-title {
+		font-size: 1.2rem;                            /* Título más pequeño */
+	}
+}
+
+/**
+ * ANIMACIONES KEYFRAMES PERSONALIZADAS
+ * ===================================
+ * 
+ * Definición de animaciones personalizadas para efectos especiales.
+ */
+
+/* Animación de entrada del modal */
+@keyframes modalFadeIn {
+	from {
+		opacity: 0;                                   /* Comienza invisible */
+		transform: scale(0.8) translateY(30px);      /* Pequeño y desplazado hacia abajo */
+	}
+	to {
+		opacity: 1;                                   /* Termina visible */
+		transform: scale(1) translateY(0);           /* Tamaño normal y posición final */
+	}
+}
+
+/* Animación de salida del modal */
+@keyframes modalFadeOut {
+	from {
+		opacity: 1;                                   /* Comienza visible */
+		transform: scale(1) translateY(0);           /* Tamaño normal */
+	}
+	to {
+		opacity: 0;                                   /* Termina invisible */
+		transform: scale(0.8) translateY(30px);      /* Pequeño y desplazado */
+	}
+}
+
+/* Animación de pulsación para botones */
+@keyframes buttonPulse {
+	0% {
+		transform: scale(1);                          /* Tamaño normal */
+	}
+	50% {
+		transform: scale(1.05);                       /* Ligeramente más grande */
+	}
+	100% {
+		transform: scale(1);                          /* Vuelta al tamaño normal */
+	}
+}
