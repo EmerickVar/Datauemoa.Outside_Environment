@@ -42,3 +42,57 @@ footer:
 home:
     title: 'DATAUEMOA - Portail de données financières'
     welcome: 'Bienvenue sur DATAUEMOA'
+
+# ====================================================================
+# QUICKACTIONSBAR - TRADUCTIONS DU MODULE
+# ====================================================================
+# Traducciones pour la barre d'actions rapides et le modal de partage
+# @author   DataUEMOA Team
+# @version  2.0.0 (avec module Share)
+# @since    2025-06-26
+
+quickactionsbar:
+    # Tooltips de la barre d'actions
+    actions_rapides: 'Actions rapides !'
+    fermer_actions: 'Fermer les actions'
+    tableau_de_bord: 'Tableau de bord'
+    signets: 'Signets'
+    partager: 'Partager'
+    notifications: 'Notifications'
+    api: 'API'
+    aller_en_haut: 'Aller en haut !'
+
+# ====================================================================
+# MODULE SHARE - TRADUCTIONS DU MODAL DE PARTAGE
+# ====================================================================
+# Traducciones pour le modal de partage sur les réseaux sociaux
+
+share_modal:
+    # Titre et interface du modal
+    title: 'Partager la page'
+    
+    # Section d'aperçu
+    preview:
+        title: 'Titre de la page'
+        description: 'Description de la page qui va être partagée'
+    
+    # Boutons des réseaux sociaux
+    networks:
+        facebook: 'Facebook'
+        instagram: 'Instagram'
+        telegram: 'Telegram'
+        x: 'X'
+        link: 'Lien'
+    
+    # Types de partage
+    types:
+        post: 'Post'
+        story: 'Story'
+        chat: 'Chat'
+        messenger: 'Messenger'
+    
+    # Notifications
+    notifications:
+        link_copied: 'Lien copié dans le presse-papiers'
+        instagram_manual: 'Lien copié ! Ouvrez Instagram pour partager.'
+        copy_error: 'Erreur lors de la copie du lien'

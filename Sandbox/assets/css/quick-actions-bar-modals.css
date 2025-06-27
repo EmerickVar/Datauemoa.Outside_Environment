@@ -1,0 +1,877 @@
+/**
+ * ====================================================================
+ * MODAL DE PARTAGE - MODULE SHARE
+ * ====================================================================
+ * 
+ * Modal interactif pour partager du contenu sur les réseaux sociaux.
+ * Se déploie lors du clic sur le bouton de partage de la QuickActionsBar.
+ * 
+ * Fonctionnalités :
+ * - Overlay avec arrière-plan semi-transparent
+ * - Conteneur modal centré et responsif
+ * - Boutons de réseaux sociaux avec icônes distinctives
+ * - Animations d'entrée et de sortie fluides
+ * - Fermeture automatique en cliquant à l'extérieur du modal
+ * 
+ * @author   Équipe Développement DataUEMOA
+ * @license  Propietaire
+ * @version  1.0.0
+ * @since    2025-06-26
+ */
+
+/**
+ * OVERLAY DU MODAL - Arrière-plan semi-transparent
+ * ===============================================
+ * 
+ * Couche d'arrière-plan qui couvre tout l'écran lorsque le modal est actif.
+ * Fournit un contexte visuel et permet la fermeture du modal en cliquant.
+ */
+.share-modal-overlay {
+	position: fixed; /* Position fixe qui couvre tout l'écran */
+	top: 0; /* Depuis le bord supérieur */
+	left: 0; /* Depuis le bord gauche */
+	width: 100%; /* Largeur complète de la fenêtre */
+	height: 100%; /* Hauteur complète de la fenêtre */
+	background-color: rgba(0, 0, 0, 0.7); /* Arrière-plan noir semi-transparent */
+	backdrop-filter: blur(8px); /* Effet de flou de l'arrière-plan */
+	display: flex; /* Conteneur flexible pour centrer le modal */
+	align-items: center; /* Centrage vertical */
+	justify-content: center; /* Centrage horizontal */
+	z-index: 10000; /* Priorité maximale sur les autres éléments */
+	opacity: 0; /* Invisible par défaut */
+	visibility: hidden; /* Caché par défaut */
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Transition fluide d'apparition */
+}
+
+/* État actif de l'overlay */
+.share-modal-overlay.active {
+	opacity: 1; /* Visible lorsqu'il est actif */
+	visibility: visible; /* Affiché lorsqu'il est actif */
+}
+
+/**
+ * CONTENEUR PRINCIPAL DU MODAL
+ * ===========================
+ * 
+ * Conteneur central qui abrite tous les boutons de partage.
+ * Design moderne avec coins arrondis et effets de profondeur.
+ */
+.share-modal {
+	background-color: #171414; /* Arrière-plan sombre cohérent avec le thème */
+	border: 2px solid #2a2a2a; /* Bordure subtile gris foncé */
+	border-radius: 20px; /* Coins arrondis modernes */
+	padding: 30px; /* Espacement interne plus généreux */
+	box-sizing: border-box; /* Inclut padding et border dans la largeur */
+	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5); /* Ombre dramatique pour la profondeur */
+	transform: scale(0.8) translateY(30px); /* État initial de l'animation */
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Transition fluide */
+	max-width: 500px; /* Largeur maximale plus grande */
+	width: 95%; /* Largeur responsive plus étendue */
+	min-height: 350px; /* Hauteur minimale pour plus d'espace */
+}
+
+/* État actif du modal */
+.share-modal-overlay.active .share-modal {
+	transform: scale(1) translateY(0); /* Animation d'entrée complète */
+}
+
+/**
+ * EN-TÊTE DU MODAL
+ * ===============
+ * 
+ * Titre descriptif du modal avec iconographie contextuelle.
+ * Fournit une clarté sur la fonctionnalité du modal.
+ */
+.share-modal-header {
+	text-align: center; /* Centrage du contenu */
+	margin-bottom: 20px; /* Espacement inférieur */
+	color: #fff; /* Texte blanc */
+}
+
+.share-modal-title {
+	font-size: 1.4rem; /* Taille de police du titre */
+	font-weight: 600; /* Texte semi-gras */
+	margin: 0; /* Sans marges par défaut */
+	display: flex; /* Conteneur flexible */
+	align-items: center; /* Alignement vertical */
+	justify-content: center; /* Centrage horizontal */
+	gap: 10px; /* Espace entre icône et texte */
+}
+
+.share-modal-title i {
+	color: #27b0f4; /* Icône en couleur bleu distinctif */
+	font-size: 1.2rem; /* Taille de l'icône */
+}
+
+/**
+ * ZONE DE PRÉVISUALISATION DU CONTENU
+ * ==================================
+ * 
+ * Section qui affiche un aperçu de ce qui va être partagé,
+ * située entre le titre du modal et les options de réseaux sociaux.
+ */
+.share-preview {
+	background-color: #262626; /* Arrière-plan gris foncé */
+	border: 1px solid #3a3a3a; /* Bordure subtile */
+	border-radius: 8px; /* Coins arrondis */
+	padding: 25px 20px; /* Espacement interne augmenté (était 15px) */
+	margin: 20px 0; /* Marge verticale augmentée (était 15px) */
+	display: flex; /* Mise en page flexbox */
+	align-items: flex-start; /* Alignement supérieur */
+	gap: 15px; /* Espace entre éléments augmenté (était 12px) */
+	transition: all 0.3s ease; /* Transition fluide */
+	min-height: 90px; /* Hauteur minimale pour plus d'espace */
+}
+
+/* Miniature/image de prévisualisation */
+.share-preview-image {
+	width: 70px; /* Largeur augmentée (était 60px) */
+	height: 70px; /* Hauteur augmentée (était 60px) */
+	border-radius: 8px; /* Coins plus arrondis (était 6px) */
+	background-color: #1a1a1a; /* Arrière-plan par défaut */
+	display: flex; /* Centrage du contenu */
+	align-items: center; /* Centrage vertical */
+	justify-content: center; /* Centrage horizontal */
+	overflow: hidden; /* Masquer le contenu débordant */
+	flex-shrink: 0; /* Ne pas permettre le rétrécissement */
+}
+
+.share-preview-image img {
+	width: 100%; /* Largeur complète */
+	height: 100%; /* Hauteur complète */
+	object-fit: cover; /* Recadrage proportionnel */
+}
+
+.share-preview-image i {
+	color: #666; /* Icône grise pour placeholder */
+	font-size: 1.8rem; /* Taille de l'icône augmentée (était 1.5rem) */
+}
+
+/* Contenu texte de la prévisualisation */
+.share-preview-content {
+	flex: 1; /* Prendre l'espace restant */
+	min-width: 0; /* Permettre le rétrécissement */
+}
+
+.share-preview-title {
+	font-size: 0.9rem; /* Taille du titre */
+	font-weight: 600; /* Poids semi-gras */
+	color: #fff; /* Couleur blanche */
+	margin-bottom: 4px; /* Marge inférieure */
+	line-height: 1.3; /* Hauteur de ligne */
+	overflow: hidden; /* Masquer le contenu débordant */
+	display: -webkit-box; /* Support pour lignes multiples */
+	-webkit-line-clamp: 2; /* Maximum 2 lignes */
+	line-clamp: 2; /* Maximum 2 lignes (standard) */
+	-webkit-box-orient: vertical; /* Orientation verticale */
+}
+
+.share-preview-description {
+	font-size: 0.75rem; /* Taille de la description */
+	color: #aaa; /* Couleur gris clair */
+	line-height: 1.4; /* Hauteur de ligne */
+	overflow: hidden; /* Masquer le contenu débordant */
+	display: -webkit-box; /* Support pour lignes multiples */
+	-webkit-line-clamp: 2; /* Maximum 2 lignes */
+	line-clamp: 2; /* Maximum 2 lignes (standard) */
+	-webkit-box-orient: vertical; /* Orientation verticale */
+	margin-bottom: 4px; /* Marge inférieure */
+}
+
+.share-preview-url {
+	font-size: 0.7rem; /* Taille petite pour l'URL */
+	color: #666; /* Couleur grise */
+	font-family: 'Courier New', monospace; /* Police monospace */
+	overflow: hidden; /* Masquer le contenu débordant */
+	white-space: nowrap; /* Ne pas permettre le retour à la ligne */
+	text-overflow: ellipsis; /* Points de suspension */
+}
+
+/**
+ * CONTENEUR DE BOUTONS DE RÉSEAUX SOCIAUX
+ * =======================================
+ * 
+ * Mise en page en une seule rangée horizontale pour les 5 options principales.
+ * Distribue uniformément les boutons dans l'espace disponible.
+ */
+.share-options {
+	display: flex; /* Mise en page flexbox */
+	justify-content: space-between; /* Distribution uniforme */
+	align-items: center; /* Centrage vertical */
+	gap: 10px; /* Espacement entre boutons */
+	margin-top: 15px; /* Marge supérieure */
+	flex-wrap: nowrap; /* Ne pas permettre le retour à la ligne */
+}
+
+/**
+ * BOUTONS INDIVIDUELS DE RÉSEAUX SOCIAUX
+ * ======================================
+ * 
+ * Style individuel de chaque bouton de réseau social avec couleurs
+ * distinctives et effets d'interaction personnalisés.
+ * Taille fixe pour mise en page en rangée horizontale.
+ */
+.share-option {
+	display: flex; /* Conteneur flexible */
+	flex-direction: column; /* Organisation verticale */
+	align-items: center; /* Centrage horizontal */
+	justify-content: center; /* Centrage vertical */
+	padding: 8px 6px; /* Espacement interne compact */
+	border: 2px solid transparent; /* Bordure transparente initiale */
+	border-radius: 12px; /* Coins arrondis */
+	background-color: #1f1f1f; /* Arrière-plan gris foncé */
+	cursor: pointer; /* Curseur interactif */
+	width: 70px; /* Largeur fixe pour rangée */
+	height: 70px; /* Hauteur fixe pour cohérence */
+	flex-shrink: 0; /* Ne pas permettre le rétrécissement */
+	box-sizing: border-box; /* Inclure padding et border dans les dimensions */
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Transition fluide */
+	position: relative; /* Position relative pour les effets */
+	overflow: hidden; /* Masquer les débordements */
+	min-height: 80px; /* Hauteur minimale cohérente */
+}
+
+/* Effet de survol générique */
+.share-option:hover {
+	transform: translateY(-3px); /* Élévation légère au survol */
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Ombre augmentée */
+}
+
+/* Icône des réseaux sociaux */
+.share-option i {
+	font-size: 1.4rem; /* Taille de l'icône compacte */
+	margin-bottom: 4px; /* Espacement inférieur réduit */
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Transition fluide avec easing */
+}
+
+/* Texte descriptif du bouton */
+.share-option .share-label {
+	font-size: 0.65rem; /* Texte plus petit pour mise en page compacte */
+	color: #ccc; /* Couleur gris clair */
+	text-align: center; /* Centrage du texte */
+	font-weight: 500; /* Poids du texte */
+	line-height: 1; /* Hauteur de ligne compacte */
+	white-space: nowrap; /* Ne pas permettre le retour à la ligne */
+	overflow: hidden; /* Masquer le texte débordant */
+	text-overflow: ellipsis; /* Points de suspension si nécessaire */
+}
+
+/**
+ * COULEURS DE BRANDING PAR DÉFAUT
+ * ===============================
+ * 
+ * Chaque icône a sa couleur de branding par défaut,
+ * avec des animations fluides au survol.
+ */
+
+/* Facebook - Bleu officiel */
+.facebook-main i {
+	color: #1877f2; /* Couleur Facebook par défaut */
+}
+
+.facebook-main:hover {
+	border-color: #1877f2; /* Bordure bleue Facebook */
+	background-color: rgba(24, 119, 242, 0.1); /* Arrière-plan bleu semi-transparent */
+	transform: translateY(-2px); /* Élévation subtile */
+}
+
+.facebook-main:hover i {
+	color: #1877f2; /* Icône bleue Facebook */
+	filter: brightness(1.2); /* Luminosité augmentée */
+	transform: scale(1.1); /* Augmentation de taille */
+}
+
+/* Instagram - Rose/orange dégradé */
+.instagram-main i {
+	background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
+
+.instagram-main:hover {
+	border-color: #e4405f; /* Bordure rose Instagram */
+	background-color: rgba(228, 64, 95, 0.1); /* Arrière-plan rose semi-transparent */
+	transform: translateY(-2px); /* Élévation subtile */
+}
+
+.instagram-main:hover i {
+	filter: brightness(1.3) saturate(1.2); /* Luminosité et saturation augmentées */
+	transform: scale(1.1); /* Augmentation de taille */
+}
+
+/* Telegram - Bleu caractéristique */
+.telegram-main i {
+	color: #0088cc; /* Couleur Telegram par défaut */
+}
+
+.telegram-main:hover {
+	border-color: #0088cc; /* Bordure bleue Telegram */
+	background-color: rgba(0, 136, 204, 0.1); /* Arrière-plan bleu semi-transparent */
+	transform: translateY(-2px); /* Élévation subtile */
+}
+
+.telegram-main:hover i {
+	color: #0088cc; /* Icône bleue Telegram */
+	filter: brightness(1.2); /* Luminosité augmentée */
+	transform: scale(1.1); /* Augmentation de taille */
+}
+
+/* X - Noir et blanc officiel */
+.x-option i {
+	color: #ffffff; /* Couleur blanche par défaut */
+}
+
+.x-option:hover {
+	border-color: #ffffff; /* Bordure blanche */
+	background-color: rgba(255, 255, 255, 0.1); /* Arrière-plan blanc semi-transparent */
+	transform: translateY(-2px); /* Élévation subtile */
+}
+
+.x-option:hover i {
+	color: #ffffff; /* Icône blanche au survol */
+	filter: brightness(1.3) drop-shadow(0 0 8px rgba(255, 255, 255, 0.3)); /* Luminosité et lueur */
+	transform: scale(1.1); /* Augmentation de taille */
+}
+
+/* Copy Link - Cyan caractéristique */
+.copy-link i {
+	color: #00bcd4; /* Couleur cyan par défaut */
+}
+
+.copy-link:hover {
+	border-color: #00bcd4; /* Bordure cyan */
+	background-color: rgba(0, 188, 212, 0.1); /* Arrière-plan cyan semi-transparent */
+	transform: translateY(-2px); /* Élévation subtile */
+}
+
+.copy-link:hover i {
+	color: #00bcd4; /* Icône cyan */
+	filter: brightness(1.2); /* Luminosité augmentée */
+	transform: scale(1.1); /* Augmentation de taille */
+}
+
+/**
+ * ANIMATIONS ET EFFETS SPÉCIAUX
+ * =============================
+ * 
+ * Animations supplémentaires pour améliorer l'expérience utilisateur.
+ */
+
+/* Effet ripple pour les boutons de partage */
+.share-option::after {
+	content: ''; /* Pseudo-élément vide */
+	position: absolute; /* Position absolue */
+	width: 100%; /* Largeur complète */
+	height: 100%; /* Hauteur complète */
+	background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%); /* Dégradé radial */
+	transform: scale(0); /* Échelle initiale */
+	opacity: 0; /* Invisible par défaut */
+	transition: all 0.6s ease; /* Transition lente */
+	border-radius: 12px; /* Coins arrondis */
+}
+
+/* Activation de l'effet ripple */
+.share-option:active::after {
+	transform: scale(2); /* Expansion de l'effet */
+	opacity: 1; /* Visible pendant le clic */
+	transition: 0s; /* Transition instantanée */
+}
+
+/**
+ * NOTIFICATION DE COPIE RÉUSSIE
+ * =============================
+ * 
+ * Message temporaire qui apparaît lorsque le lien est copié.
+ */
+.copy-notification {
+	position: fixed; /* Position fixe */
+	top: 20px; /* Depuis le haut */
+	left: 50%; /* Centrage horizontal */
+	transform: translateX(-50%) translateY(-100px); /* Position initiale cachée */
+	background-color: #10b981; /* Arrière-plan vert succès */
+	color: white; /* Texte blanc */
+	padding: 12px 20px; /* Espacement interne */
+	border-radius: 8px; /* Coins arrondis */
+	font-size: 0.9rem; /* Taille de police */
+	font-weight: 500; /* Poids du texte */
+	box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); /* Ombre verte */
+	z-index: 10001; /* Priorité maximale */
+	opacity: 0; /* Invisible par défaut */
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Transition fluide */
+}
+
+/* État actif de la notification */
+.copy-notification.show {
+	transform: translateX(-50%) translateY(0); /* Animation d'entrée */
+	opacity: 1; /* Visible */
+}
+
+/**
+ * DESIGN RESPONSIVE POUR MOBILES
+ * ==============================
+ * 
+ * Adaptations spécifiques pour appareils mobiles et tablettes.
+ */
+@media (max-width: 768px) {
+	.share-modal {
+		padding: 20px; /* Padding réduit sur mobile */
+		box-sizing: border-box; /* Inclut padding et border dans la largeur */
+		margin: 20px; /* Marge latérale sur mobile */
+		max-width: none; /* Sans limite de largeur */
+		width: calc(100% - 40px); /* Largeur responsive avec marges */
+	}
+
+	.share-options {
+		justify-content: space-between; /* Maintenir la distribution uniforme */
+		gap: 8px; /* Espacement réduit pour mobile */
+		flex-wrap: nowrap; /* Ne pas permettre le retour à la ligne */
+		overflow-x: auto; /* Défilement horizontal si nécessaire */
+		padding: 0 5px; /* Padding latéral petit */
+	}
+
+	.share-option {
+		width: 60px; /* Largeur réduite pour mobile */
+		height: 60px; /* Hauteur réduite pour mobile */
+		padding: 6px 4px; /* Padding plus compact */
+		flex-shrink: 0; /* Ne pas permettre le rétrécissement */
+		box-sizing: border-box; /* Inclure padding dans les dimensions */
+	}
+
+	.share-option i {
+		font-size: 1.2rem; /* Icônes plus petites */
+		margin-bottom: 2px; /* Marge inférieure réduite */
+	}
+
+	.share-option .share-label {
+		font-size: 0.6rem; /* Texte plus petit */
+		line-height: 1; /* Hauteur de ligne compacte */
+	}
+
+	.share-modal-title {
+		font-size: 1.2rem; /* Titre plus petit */
+	}
+
+	/* Adaptations pour la prévisualisation sur mobile */
+	.share-preview {
+		padding: 18px 15px; /* Padding augmenté (était 12px) */
+		margin: 18px 0; /* Marge augmentée (était 12px) */
+		gap: 12px; /* Gap augmenté (était 10px) */
+		min-height: 80px; /* Hauteur minimale sur mobile */
+	}
+
+	.share-preview-image {
+		width: 60px; /* Image plus grande (était 50px) */
+		height: 60px; /* Hauteur proportionnelle */
+	}
+
+	.share-preview-image i {
+		font-size: 1.5rem; /* Icône plus grande (était 1.2rem) */
+	}
+
+	.share-preview-title {
+		font-size: 0.8rem; /* Titre plus petit */
+		-webkit-line-clamp: 1; /* Seulement 1 ligne sur mobile */
+		line-clamp: 1; /* Seulement 1 ligne sur mobile (standard) */
+	}
+
+	.share-preview-description {
+		font-size: 0.7rem; /* Description plus petite */
+		-webkit-line-clamp: 1; /* Seulement 1 ligne sur mobile */
+		line-clamp: 1; /* Seulement 1 ligne sur mobile (standard) */
+	}
+
+	.share-preview-url {
+		font-size: 0.65rem; /* URL plus petite */
+	}
+}
+
+/**
+ * ====================================================================
+ * SYSTÈME DE SOUS-MENUS - MODULE SHARE AVANCÉ
+ * ====================================================================
+ * 
+ * Système de navigation hiérarchique pour les options de partage.
+ * Les icônes principales (Facebook, Instagram, Telegram) déploient
+ * des sous-menus au survol avec des options spécifiques à chaque plateforme.
+ * 
+ * Fonctionnalités :
+ * - Déclencheurs de survol pour afficher/masquer les sous-menus
+ * - Animations fluides de déploiement
+ * - Positionnement intelligent des sous-menus
+ * - Indicateurs visuels d'options extensibles
+ * 
+ * @author   DataUEMOA Team
+ * @version  2.0.0
+ * @since    2025-06-26
+ */
+
+/**
+ * CONTENEUR DE GROUPE D'OPTIONS
+ * =============================
+ * 
+ * Conteneur qui groupe une option principale avec son sous-menu.
+ * Gère le positionnement relatif pour les sous-menus absolus.
+ */
+.share-option-group {
+	position: relative; /* Contexte de positionnement pour sous-menus */
+	display: flex; /* Mise en page flexible */
+	flex-direction: column; /* Organisation verticale */
+}
+
+/**
+ * OPTIONS PRINCIPALES AVEC SOUS-MENU
+ * ==================================
+ * 
+ * Style pour les options principales qui ont des sous-menus.
+ * Incluent des indicateurs visuels et des effets de survol spéciaux.
+ */
+.share-option.facebook-main,
+.share-option.instagram-main,
+.share-option.telegram-main {
+	position: relative; /* Pour positionner la flèche */
+	cursor: pointer; /* Curseur interactif */
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Transition fluide */
+}
+
+/**
+ * FLÈCHE INDICATRICE DE SOUS-MENU
+ * ===============================
+ * 
+ * Petite flèche qui indique que l'option a un sous-menu.
+ * Se positionne dans le coin supérieur droit du bouton et pointe vers le haut.
+ */
+.submenu-arrow {
+	position: absolute !important; /* Position absolue forcée */
+	top: 8px !important; /* Position depuis le haut */
+	right: 8px !important; /* Position depuis la droite */
+	font-size: 0.7rem !important; /* Taille petite */
+	color: rgba(255, 255, 255, 0.6) !important; /* Couleur semi-transparente */
+	transition: all 0.3s ease !important; /* Transition fluide */
+	z-index: 10 !important; /* Priorité d'affichage */
+	transform: rotate(-90deg) !important; /* Pointe vers le haut par défaut */
+}
+
+/* Effet de survol sur la flèche */
+.share-option-group:hover .submenu-arrow {
+	color: rgba(255, 255, 255, 0.9) !important; /* Plus visible au survol */
+	transform: rotate(-90deg) scale(1.1) !important; /* Maintient la direction vers le haut avec une légère augmentation */
+}
+
+/**
+ * CONTENEUR DE SOUS-MENU - CENTRAGE PARFAIT
+ * ==========================================
+ * 
+ * Conteneur qui abrite les options secondaires de chaque plateforme.
+ * Se positionne de manière absolue au-dessus de l'élément principal et s'affiche au survol.
+ * Inclut un "pont invisible" pour maintenir la connexion entre le bouton et le sous-menu.
+ * Optimisé spécialement pour le centrage parfait visuel de la colonne d'options.
+ */
+.share-submenu {
+	position: absolute; /* Position absolue par rapport au groupe */
+	bottom: calc(100% + 5px); /* Positionné au-dessus avec espace réduit */
+	left: 50%; /* Point de référence central */
+	transform: translateX(-50%) translateY(10px) scale(0.95); /* Centrage parfait et état initial */
+	background-color: #1a1a1a; /* Arrière-plan sombre */
+	border: 2px solid #2a2a2a; /* Bordure subtile */
+	border-radius: 12px; /* Coins arrondis */
+	padding: 12px 8px; /* Espacement interne équilibré (supérieur/inférieur plus large) */
+	box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4); /* Ombre profonde */
+	backdrop-filter: blur(10px); /* Effet de flou */
+	opacity: 0; /* Invisible par défaut */
+	visibility: hidden; /* Caché par défaut */
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Transition fluide */
+	z-index: 1000; /* Priorité élevée */
+	min-width: 150px; /* Largeur minimale optimale pour centrage parfait */
+	max-width: 170px; /* Largeur maximale contrôlée */
+	pointer-events: auto; /* Toujours interactif */
+	white-space: nowrap; /* Éviter le retour à la ligne */
+	display: flex; /* Mise en page flex pour centrer le contenu */
+	flex-direction: column; /* Organisation verticale */
+	align-items: center; /* Centrage horizontal parfait du contenu */
+	justify-content: center; /* Centrage vertical du contenu */
+	text-align: center; /* Centrage du texte */
+}
+
+/* Pont invisible pour maintenir la connexion de survol */
+.share-submenu::before {
+	content: ''; /* Pseudo-élément vide */
+	position: absolute; /* Position absolue */
+	top: 100%; /* Depuis la partie inférieure du sous-menu */
+	left: 50%; /* Centré horizontalement */
+	transform: translateX(-50%); /* Centrage parfait */
+	width: 100%; /* Largeur du sous-menu */
+	height: 10px; /* Hauteur du pont (gap entre sous-menu et bouton) */
+	background: transparent; /* Invisible mais interactif */
+	pointer-events: auto; /* Permet l'interaction */
+	z-index: 999; /* Juste en dessous du sous-menu */
+}
+
+/* État actif du sous-menu (survol sur le groupe OU survol sur le sous-menu) */
+.share-option-group:hover .share-submenu,
+.share-submenu:hover {
+	opacity: 1; /* Visible */
+	visibility: visible; /* Afficher */
+	transform: translateX(-50%) translateY(0) scale(1); /* Position et échelle finales centrées */
+	pointer-events: auto; /* Activer l'interaction */
+}
+
+/* Maintenir le bouton principal mis en évidence quand le survol est sur le sous-menu */
+.share-option-group:hover .share-option,
+.share-submenu:hover + .share-option {
+	border-color: inherit; /* Maintenir la couleur de bordure */
+	background-color: inherit; /* Maintenir la couleur d'arrière-plan */
+	transform: translateY(-2px); /* Maintenir l'élévation */
+}
+
+/**
+ * OPTIONS DANS LE SOUS-MENU
+ * =========================
+ * 
+ * Style pour les options individuelles dans chaque sous-menu.
+ * Optimisé pour un centrage parfait visuel et fonctionnel.
+ */
+.share-submenu .share-option {
+	margin-bottom: 6px; /* Espacement uniforme entre options */
+	padding: 12px 16px; /* Padding équilibré pour un meilleur centrage */
+	min-height: auto; /* Sans hauteur minimale fixe */
+	background-color: #252525; /* Arrière-plan légèrement plus clair */
+	border: 1px solid #3a3a3a; /* Bordure plus subtile */
+	font-size: 0.85rem; /* Texte plus petit */
+	width: 100%; /* Largeur complète du conteneur */
+	display: flex; /* Mise en page flex pour centrage */
+	flex-direction: column; /* Organisation verticale */
+	align-items: center; /* Centrage horizontal parfait */
+	justify-content: center; /* Centrage vertical parfait */
+	text-align: center; /* Centrage du texte */
+	box-sizing: border-box; /* Inclure padding dans la largeur */
+	position: relative; /* Position relative pour les effets */
+	overflow: hidden; /* Masquer le débordement */
+	cursor: pointer; /* Curseur interactif */
+	transition: all 0.2s ease-in-out; /* Transition fluide */
+}
+
+/* Dernier élément sans marge inférieure */
+.share-submenu .share-option:last-child {
+	margin-bottom: 0; /* Sans marge sur le dernier */
+}
+
+/* Effet de survol spécifique pour les options de sous-menu */
+.share-submenu .share-option:hover {
+	transform: translateY(-2px); /* Déplacement vertical subtil vers le haut */
+	background-color: #2d2d2d; /* Arrière-plan plus clair au survol */
+}
+
+/* Icônes dans les sous-menus - Centrage parfait */
+.share-submenu .share-option i {
+	font-size: 1.3rem; /* Taille optimale pour la visibilité */
+	margin-bottom: 5px; /* Espacement inférieur équilibré */
+	display: block; /* Display block pour centrage complet */
+	text-align: center; /* Centrage de l'icône */
+	width: 100%; /* Largeur complète pour centrage */
+	transition: all 0.2s ease-in-out; /* Transition fluide */
+}
+
+/* Étiquettes dans les sous-menus - Centrage parfait */
+.share-submenu .share-option .share-label {
+	font-size: 0.75rem; /* Texte compact mais lisible */
+	line-height: 1.2; /* Hauteur de ligne optimisée */
+	font-weight: 500; /* Poids de police équilibré */
+	display: block; /* Display block pour centrage */
+	text-align: center; /* Centrage du texte */
+	width: 100%; /* Largeur complète pour centrage */
+	margin: 0; /* Sans marges pour centrage parfait */
+	letter-spacing: 0.3px; /* Espacement des lettres amélioré */
+}
+
+/**
+ * POSITIONNEMENT INTELLIGENT DES SOUS-MENUS
+ * =========================================
+ * 
+ * Ajustements de positionnement spécifiques pour chaque sous-menu
+ * basés sur leur position dans la grille principale.
+ */
+
+/* Sous-menu Facebook (première position) */
+.facebook-submenu {
+	left: calc(100% + 10px); /* Position standard à droite */
+}
+
+/* Sous-menu Instagram (position centrale) */
+.instagram-submenu {
+	left: calc(100% + 10px); /* Position standard à droite */
+}
+
+/* Sous-menu Telegram (peut nécessiter un ajustement selon la mise en page) */
+.telegram-submenu {
+	left: calc(100% + 10px); /* Position standard à droite */
+}
+
+/**
+ * EFFETS SPÉCIAUX POUR LES SOUS-MENUS
+ * ===================================
+ * 
+ * Animations et effets supplémentaires pour améliorer l'expérience.
+ */
+
+/* Effet de ligne connectrice (optionnel) */
+.share-option-group:hover::before {
+	content: ''; /* Pseudo-élément vide */
+	position: absolute; /* Position absolue */
+	top: 50%; /* Centré verticalement */
+	right: -5px; /* Position depuis la droite */
+	width: 10px; /* Largeur de la ligne */
+	height: 2px; /* Hauteur de la ligne */
+	background-color: rgba(255, 255, 255, 0.3); /* Couleur semi-transparente */
+	transform: translateY(-50%); /* Centrage exact */
+	transition: all 0.3s ease; /* Transition fluide */
+}
+
+/**
+ * RESPONSIVE POUR LES SOUS-MENUS
+ * ==============================
+ * 
+ * Adaptations spécifiques pour appareils mobiles.
+ */
+@media (max-width: 768px) {
+	/* Sur mobile, les sous-menus se positionnent en dessous au lieu d'au-dessus */
+	.share-submenu {
+		position: static; /* Position statique */
+		transform: none; /* Sans transformations */
+		left: auto; /* Positionnement automatique */
+		bottom: auto; /* Positionnement automatique */
+		margin-top: 8px; /* Marge supérieure */
+		width: 100%; /* Largeur complète */
+		max-height: 0; /* Hauteur initiale zéro */
+		overflow: hidden; /* Masquer le contenu débordant */
+		padding: 0; /* Sans padding initial */
+		border: none; /* Sans bordure initiale */
+		box-shadow: none; /* Sans ombre initiale */
+		background: transparent; /* Arrière-plan transparent */
+	}
+
+	/* État actif sur mobile */
+	.share-option-group:hover .share-submenu {
+		max-height: 200px; /* Hauteur maximale étendue */
+		padding: 8px; /* Padding restauré */
+		border: 2px solid #2a2a2a; /* Bordure restaurée */
+		box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Ombre restaurée */
+		background-color: #1a1a1a; /* Arrière-plan restauré */
+		transform: none; /* Sans transformations sur mobile */
+	}
+
+	/* Masquer les flèches sur mobile */
+	.submenu-arrow {
+		transform: rotate(90deg) !important; /* Flèche vers le bas toujours */
+	}
+
+	/* Ajuster l'espacement des options de sous-menu sur mobile - Centrage parfait */
+	.share-submenu .share-option {
+		margin-bottom: 4px; /* Espacement réduit */
+		padding: 10px 12px; /* Padding encore plus compact */
+		display: flex; /* Maintenir la mise en page flex */
+		flex-direction: column; /* Organisation verticale */
+		align-items: center; /* Centrage horizontal parfait */
+		justify-content: center; /* Centrage vertical parfait */
+		text-align: center; /* Centrage du texte */
+	}
+
+	/* Icônes et étiquettes centrées sur mobile */
+	.share-submenu .share-option i {
+		margin-bottom: 3px; /* Espacement réduit pour mobile */
+		text-align: center; /* Centrage de l'icône */
+		width: 100%; /* Largeur complète */
+	}
+
+	.share-submenu .share-option .share-label {
+		text-align: center; /* Centrage du texte */
+		width: 100%; /* Largeur complète */
+	}
+
+	/* S'assurer qu'il n'y a pas d'effets de survol vertical sur mobile */
+	.share-submenu .share-option:hover {
+		transform: none; /* Sans transformations sur mobile */
+	}
+}
+
+/**
+ * COULEURS DE BRANDING POUR LES SOUS-MENUS
+ * ========================================
+ * 
+ * Couleurs spécifiques pour les options des sous-menus avec
+ * des animations au survol qui maintiennent la cohérence visuelle.
+ */
+
+/* Sous-menu Facebook - Options spécifiques */
+.facebook-submenu .share-option[data-platform='facebook'][data-type='post'] i {
+	color: #1877f2; /* Bleu Facebook pour Post */
+}
+
+.facebook-submenu .share-option[data-platform='facebook'][data-type='story'] i {
+	color: #42b883; /* Vert pour Stories */
+}
+
+.facebook-submenu .share-option[data-platform='messenger'] i {
+	background: linear-gradient(45deg, #00b2ff 0%, #006aff 100%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
+
+/* Survol pour sous-menu Facebook */
+.facebook-submenu .share-option:hover {
+	background-color: rgba(24, 119, 242, 0.1); /* Arrière-plan bleu Facebook */
+	border-color: #1877f2; /* Bordure bleue */
+}
+
+.facebook-submenu .share-option:hover i {
+	filter: brightness(1.2); /* Luminosité augmentée */
+	transform: scale(1.05); /* Augmentation subtile */
+}
+
+/* Sous-menu Instagram - Options spécifiques */
+.instagram-submenu .share-option[data-platform='instagram'][data-type='post'] i {
+	background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
+
+.instagram-submenu .share-option[data-platform='instagram'][data-type='story'] i {
+	color: #ff6b35; /* Orange pour Stories */
+}
+
+.instagram-submenu .share-option[data-platform='instagram'][data-type='chat'] i {
+	color: #833ab4; /* Violet pour Chat */
+}
+
+/* Survol pour sous-menu Instagram */
+.instagram-submenu .share-option:hover {
+	background-color: rgba(228, 64, 95, 0.1); /* Arrière-plan rose Instagram */
+	border-color: #e4405f; /* Bordure rose */
+}
+
+.instagram-submenu .share-option:hover i {
+	filter: brightness(1.2) saturate(1.2); /* Luminosité et saturation */
+	transform: scale(1.05); /* Augmentation subtile */
+}
+
+/* Sous-menu Telegram - Options spécifiques */
+.telegram-submenu .share-option[data-platform='telegram'][data-type='story'] i {
+	color: #0088cc; /* Bleu Telegram pour Stories */
+}
+
+.telegram-submenu .share-option[data-platform='telegram'][data-type='chat'] i {
+	color: #54a3d8; /* Bleu clair pour Chat */
+}
+
+/* Survol pour sous-menu Telegram */
+.telegram-submenu .share-option:hover {
+	background-color: rgba(0, 136, 204, 0.1); /* Arrière-plan bleu Telegram */
+	border-color: #0088cc; /* Bordure bleue */
+}
+
+.telegram-submenu .share-option:hover i {
+	filter: brightness(1.2); /* Luminosité augmentée */
+	transform: scale(1.05); /* Augmentation de taille */
+}

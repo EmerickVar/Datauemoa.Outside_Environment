@@ -331,240 +331,193 @@
 {% endblock %}
 
 {% block body %}
-<div class="container-fluid">
-    <!-- Header Section -->
-    <div class="currency-header section-with-bookmark">
-        <button class="bookmark-icon" data-bookmark-type="header" data-bookmark-name="Información General">
-            <i class="far fa-bookmark"></i>
-        </button>
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <h1 class="currency-title">
-                        {{ currency_pair.from_currency_name ?? 'Euro' }} - {{ currency_pair.to_currency_name ?? 'Dólar estadounidense' }}
-                    </h1>
-                    <div class="currency-pair">
-                        {{ currency_pair.from_currency_code ?? 'EUR' }} / {{ currency_pair.to_currency_code ?? 'USD' }}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="container">
-        <!-- Rate Information -->
-        <div class="rate-container section-with-bookmark">
-            <button class="bookmark-icon" data-bookmark-type="rate" data-bookmark-name="Cotización Actual">
+    <div class="container-fluid">
+        <!-- Header Section -->
+        <div class="currency-header section-with-bookmark">
+            <button class="bookmark-icon" data-bookmark-type="header" data-bookmark-name="Información General">
                 <i class="far fa-bookmark"></i>
             </button>
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="rate-info">
-                        <span class="arrow-icon">➤</span>
-                        <div class="current-rate">
-                            {{ currency_pair.current_rate ?? '1,14611' }} {{ currency_pair.to_currency_code ?? 'USD' }}
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <h1 class="currency-title">
+                            {{ currency_pair.from_currency_name ?? 'Euro' }} - {{ currency_pair.to_currency_name ?? 'Dólar estadounidense' }}
+                        </h1>
+                        <div class="currency-pair">
+                            {{ currency_pair.from_currency_code ?? 'EUR' }} / {{ currency_pair.to_currency_code ?? 'USD' }}
                         </div>
-                        <div class="rate-badge">SPOT</div>
-                    </div>
-                    
-                    <div class="performance-stats">
-                        <div class="stat-item">
-                            <div class="stat-label">Día</div>
-                            <div class="stat-value {{ currency_pair.day_change >= 0 ? 'positive' : 'negative' }}">
-                                {{ currency_pair.day_change ?? '0' }}%
-                            </div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-label">Semana</div>
-                            <div class="stat-value {{ currency_pair.week_change >= 0 ? 'positive' : 'negative' }}">
-                                {{ currency_pair.week_change ?? '-0,59' }}%
-                            </div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-label">Mes</div>
-                            <div class="stat-value {{ currency_pair.month_change >= 0 ? 'positive' : 'negative' }}">
-                                {{ currency_pair.month_change ?? '1,77' }}%
-                            </div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-label">Año</div>
-                            <div class="stat-value {{ currency_pair.year_change >= 0 ? 'positive' : 'negative' }}">
-                                {{ currency_pair.year_change ?? '7,47' }}%
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="last-update">
-                        <i class="far fa-clock"></i>
-                        {{ currency_pair.last_update ?? '2025-06-23 09:24:44' }} (UTC)
-                    </div>
-                </div>
-                
-                <div class="col-md-4">
-                    <div class="text-center">
-                        <img src="https://via.placeholder.com/200x150/f3f4f6/2563eb?text=Gráfico" 
-                             alt="Gráfico de {{ currency_pair.from_currency_code ?? 'EUR' }}/{{ currency_pair.to_currency_code ?? 'USD' }}"
-                             class="img-fluid rounded">
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Navigation Tabs -->
-        <div class="navigation-tabs">
-            <div class="nav-buttons">
-                <button class="nav-btn active" data-tab="chart">
-                    <i class="fas fa-chart-line"></i> Gráfico
+        <div class="container">
+            <!-- Rate Information -->
+            <div class="rate-container section-with-bookmark">
+                <button class="bookmark-icon" data-bookmark-type="rate" data-bookmark-name="Cotización Actual">
+                    <i class="far fa-bookmark"></i>
                 </button>
-                <button class="nav-btn" data-tab="history">
-                    <i class="fas fa-history"></i> Últimos 5 días
-                </button>
-                <button class="nav-btn" data-tab="historical">
-                    <i class="fas fa-database"></i> Historial
-                </button>
-                <button class="nav-btn" data-tab="calendar">
-                    <i class="fas fa-calendar-alt"></i> Calendario económico
-                </button>
-                <button class="nav-btn" data-tab="news">
-                    <i class="fas fa-newspaper"></i> Noticias
-                </button>
-            </div>
-            
-            <div class="tab-content p-4">
-                <!-- Graph -->
-                <div id="chart" class="tab-pane active section-with-bookmark">
-                    <button class="bookmark-icon" data-bookmark-type="chart" data-bookmark-name="Gráfico Interactivo">
-                        <i class="far fa-bookmark"></i>
-                    </button>
-                    <div class="text-center">
-                        <h4>Gráfico Interactivo</h4>
-                        <p class="text-muted">Aquí se mostrará el gráfico interactivo del par de monedas</p>
-                        <div style="height: 400px; background: #f8fafc; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                            <span class="text-muted">
-                                <i class="fas fa-chart-area fa-3x mb-3"></i><br>
-                                Gráfico en tiempo real
-                            </span>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="rate-info">
+                            <span class="arrow-icon">➤</span>
+                            <div class="current-rate">
+                                {{ currency_pair.current_rate ?? '1,14611' }} {{ currency_pair.to_currency_code ?? 'USD' }}
+                            </div>
+                            <div class="rate-badge">SPOT</div>
+                        </div>
+                        
+                        <div class="performance-stats">
+                            <div class="stat-item">
+                                <div class="stat-label">Día</div>
+                                <div class="stat-value {{ currency_pair.day_change >= 0 ? 'positive' : 'negative' }}">
+                                    {{ currency_pair.day_change ?? '0' }}%
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Semana</div>
+                                <div class="stat-value {{ currency_pair.week_change >= 0 ? 'positive' : 'negative' }}">
+                                    {{ currency_pair.week_change ?? '-0,59' }}%
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Mes</div>
+                                <div class="stat-value {{ currency_pair.month_change >= 0 ? 'positive' : 'negative' }}">
+                                    {{ currency_pair.month_change ?? '1,77' }}%
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Año</div>
+                                <div class="stat-value {{ currency_pair.year_change >= 0 ? 'positive' : 'negative' }}">
+                                    {{ currency_pair.year_change ?? '7,47' }}%
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="last-update">
+                            <i class="far fa-clock"></i>
+                            {{ currency_pair.last_update ?? '2025-06-23 09:24:44' }} (UTC)
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <img src="https://placehold.co/360x250/png" 
+                                alt="Gráfico de {{ currency_pair.from_currency_code ?? 'EUR' }}/{{ currency_pair.to_currency_code ?? 'USD' }}"
+                                class="img-fluid rounded">
                         </div>
                     </div>
                 </div>
-                
-                <!-- Last 5 days -->
-                <div id="history" class="tab-pane section-with-bookmark" style="display: none;">
-                    <button class="bookmark-icon" data-bookmark-type="history" data-bookmark-name="Últimos 5 días">
-                        <i class="far fa-bookmark"></i>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <div class="navigation-tabs">
+                <div class="nav-buttons">
+                    <button class="nav-btn active" data-tab="chart">
+                        <i class="fas fa-chart-line"></i> Gráfico
                     </button>
-                    <h4>Últimos 5 días</h4>
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Fecha</th>
-                                    <th>Apertura</th>
-                                    <th>Máximo</th>
-                                    <th>Mínimo</th>
-                                    <th>Cierre</th>
-                                    <th>Cambio</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for day in recent_history ?? [] %}
-                                <tr>
-                                    <td>{{ day.date }}</td>
-                                    <td>{{ day.open }}</td>
-                                    <td>{{ day.high }}</td>
-                                    <td>{{ day.low }}</td>
-                                    <td>{{ day.close }}</td>
-                                    <td class="{{ day.change >= 0 ? 'positive' : 'negative' }}">
-                                        {{ day.change }}%
-                                    </td>
-                                </tr>
-                                {% else %}
-                                <tr>
-                                    <td colspan="6" class="text-center text-muted">
-                                        No hay datos históricos disponibles
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                    <button class="nav-btn" data-tab="history">
+                        <i class="fas fa-history"></i> Últimos 5 días
+                    </button>
+                    <button class="nav-btn" data-tab="historical">
+                        <i class="fas fa-database"></i> Historial
+                    </button>
+                    <button class="nav-btn" data-tab="calendar">
+                        <i class="fas fa-calendar-alt"></i> Calendario económico
+                    </button>
+                    <button class="nav-btn" data-tab="news">
+                        <i class="fas fa-newspaper"></i> Noticias
+                    </button>
+                </div>
+                
+                <div class="tab-content p-4">
+                    <!-- Graph -->
+                    <div id="chart" class="tab-pane active section-with-bookmark">
+                        <button class="bookmark-icon" data-bookmark-type="chart" data-bookmark-name="Gráfico Interactivo">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                        <div class="text-center">
+                            <h4>Gráfico Interactivo</h4>
+                            <p class="text-muted">Aquí se mostrará el gráfico interactivo del par de monedas</p>
+                            <div style="height: 400px; background: #f8fafc; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                <span class="text-muted">
+                                    <i class="fas fa-chart-area fa-3x mb-3"></i><br>
+                                    Gráfico en tiempo real
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                
-                <!-- History -->
-                <div id="historical" class="tab-pane section-with-bookmark" style="display: none;">
-                    <button class="bookmark-icon" data-bookmark-type="historical" data-bookmark-name="Historial Completo">
-                        <i class="far fa-bookmark"></i>
-                    </button>
-                    <h4>Historial Completo</h4>
-                    <p class="text-muted">Acceso al historial completo de cotizaciones</p>
-                </div>
-                
-                <!-- Economic Calendar -->
-                <div id="calendar" class="tab-pane section-with-bookmark" style="display: none;">
-                    <button class="bookmark-icon" data-bookmark-type="calendar" data-bookmark-name="Calendario Económico">
-                        <i class="far fa-bookmark"></i>
-                    </button>
-                    <h4>Calendario Económico</h4>
-                    <p class="text-muted">Eventos económicos que pueden afectar este par de monedas</p>
-                </div>
-                
-                <!-- Related News -->
-                <div id="news" class="tab-pane section-with-bookmark" style="display: none;">
-                    <button class="bookmark-icon" data-bookmark-type="news" data-bookmark-name="Noticias Relacionadas">
-                        <i class="far fa-bookmark"></i>
-                    </button>
-                    <h4>Noticias Relacionadas</h4>
-                    <p class="text-muted">Últimas noticias sobre {{ currency_pair.from_currency_code ?? 'EUR' }}/{{ currency_pair.to_currency_code ?? 'USD' }}</p>
+                    
+                    <!-- Last 5 days -->
+                    <div id="history" class="tab-pane section-with-bookmark" style="display: none;">
+                        <button class="bookmark-icon" data-bookmark-type="history" data-bookmark-name="Últimos 5 días">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                        <h4>Últimos 5 días</h4>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Apertura</th>
+                                        <th>Máximo</th>
+                                        <th>Mínimo</th>
+                                        <th>Cierre</th>
+                                        <th>Cambio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for day in recent_history ?? [] %}
+                                    <tr>
+                                        <td>{{ day.date }}</td>
+                                        <td>{{ day.open }}</td>
+                                        <td>{{ day.high }}</td>
+                                        <td>{{ day.low }}</td>
+                                        <td>{{ day.close }}</td>
+                                        <td class="{{ day.change >= 0 ? 'positive' : 'negative' }}">
+                                            {{ day.change }}%
+                                        </td>
+                                    </tr>
+                                    {% else %}
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted">
+                                            No hay datos históricos disponibles
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- History -->
+                    <div id="historical" class="tab-pane section-with-bookmark" style="display: none;">
+                        <button class="bookmark-icon" data-bookmark-type="historical" data-bookmark-name="Historial Completo">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                        <h4>Historial Completo</h4>
+                        <p class="text-muted">Acceso al historial completo de cotizaciones</p>
+                    </div>
+                    
+                    <!-- Economic Calendar -->
+                    <div id="calendar" class="tab-pane section-with-bookmark" style="display: none;">
+                        <button class="bookmark-icon" data-bookmark-type="calendar" data-bookmark-name="Calendario Económico">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                        <h4>Calendario Económico</h4>
+                        <p class="text-muted">Eventos económicos que pueden afectar este par de monedas</p>
+                    </div>
+                    
+                    <!-- Related News -->
+                    <div id="news" class="tab-pane section-with-bookmark" style="display: none;">
+                        <button class="bookmark-icon" data-bookmark-type="news" data-bookmark-name="Noticias Relacionadas">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                        <h4>Noticias Relacionadas</h4>
+                        <p class="text-muted">Últimas noticias sobre {{ currency_pair.from_currency_code ?? 'EUR' }}/{{ currency_pair.to_currency_code ?? 'USD' }}</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-<!-- Bookmark Modal -->
-<div id="bookmarkModal" class="modal-overlay">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3 class="modal-title">Guardar en Bookmarks</h3>
-            <button class="modal-close" id="closeModal">×</button>
-        </div>
-        
-        <div id="loginForm">
-            <p class="text-muted mb-3">Para guardar este elemento en tus bookmarks y/o recibir notificaciones sobre él, necesitas proporcionar tu email o registrarte.</p>
-            
-            <div class="form-group">
-                <label class="form-label" for="userEmail">Email</label>
-                <input type="email" id="userEmail" class="form-input" placeholder="tu-email@ejemplo.com" required>
-            </div>
-            
-            <button id="saveBookmark" class="btn-primary">Guardar Bookmark</button>
-            
-            <div class="divider">
-                <span>o</span>
-            </div>
-            
-            <button id="registerUser" class="btn-secondary">Registrarse</button>
-        </div>
-        
-        <div id="registrationForm" style="display: none;">
-            <p class="text-muted mb-3">Registro rápido para acceder a tus bookmarks.</p>
-            
-            <div class="form-group">
-                <label class="form-label" for="regEmail">Email</label>
-                <input type="email" id="regEmail" class="form-input" placeholder="tu-email@ejemplo.com" required>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label" for="regName">Nombre</label>
-                <input type="text" id="regName" class="form-input" placeholder="Tu nombre" required>
-            </div>
-            
-            <button id="completeRegistration" class="btn-primary">Completar Registro</button>
-            
-            <button id="backToLogin" class="btn-secondary">Volver</button>
-        </div>
-    </div>
-</div>
-
-<script src="{{ asset('js/bookmarks.js') }}"></script>
 {% endblock %}
