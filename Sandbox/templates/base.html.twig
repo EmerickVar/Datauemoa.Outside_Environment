@@ -41,6 +41,11 @@
 			rel="stylesheet"
 			href="{{ asset('css/quick-actions-bar.css') }}" />
 
+		<!-- Modal Styles -->
+		<link
+			rel="stylesheet"
+			href="{{ asset('css/quick-actions-bar-modals.css') }}" />
+
 		{% block stylesheets %}
 		<style>
 			:root {
@@ -356,12 +361,6 @@
 			src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
 			integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
 			crossorigin="anonymous"></script>
-
-		{% block javascripts %}
-			{% block importmap %}
-				{{ importmap( 'app' ) }}
-			{% endblock %}
-		{% endblock %}
 	</head>
 	<body>
 		<!-- Navigation -->
@@ -694,6 +693,7 @@
 		</footer>
 
 		<!-- Quick Actions Bar Component -->
+		{% include 'tools/QuickActionsBar_Modals.html.twig' %}
 		{% include 'tools/QuickActionsBar.html.twig' %}
 
 		<script

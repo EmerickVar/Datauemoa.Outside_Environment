@@ -1,0 +1,297 @@
+<!-- 
+ ====================================================================
+ SECTION 1 : MODULE DE PARTAGE COMPLET
+ ====================================================================
+ 
+ Modal interactif sophistiqué pour le partage de contenu sur les
+ réseaux sociaux et plateformes de messagerie. Implémente une interface
+ utilisateur moderne avec sous-menus, animations et notifications.
+ 
+ ARCHITECTURE DU MODAL :
+ 
+ 1. Overlay de fond semi-transparent avec fermeture au clic
+ 2. Conteneur modal principal avec header et contenu
+ 3. Zone d'aperçu du contenu à partager (métadonnées)
+ 4. Grille d'options de partage avec sous-menus contextuels
+ 5. Système de notifications pour les actions utilisateur
+ 
+ PLATEFORMES SUPPORTÉES :
+ -
+ • Facebook : Post, Story, Messenger
+ • Instagram : Post, Story, Chat
+ • Telegram : Story, Chat
+ • X (Twitter) : Post direct
+ • Clipboard : Copie du lien
+ 
+ FONCTIONNALITÉS AVANCÉES :
+ 
+ • Sous-menus hover avec pont invisible (anti-flicker)
+ • Animations CSS avec courbes de Bézier personnalisées
+ • Branding couleurs officielles de chaque plateforme
+ • Notifications en temps réel avec messages traduits
+ • Gestion d'erreurs robuste avec fallbacks
+ • Interface responsive adaptée tous écrans
+ 
+ ÉVÉNEMENTS JAVASCRIPT :
+ 
+ • Ouverture : openShareModal()
+ • Fermeture : closeShareModal()
+ • Partage : handleShare(platform, type)
+ • Copie : copyToClipboard()
+ • Hover : gestion automatique des sous-menus
+ 
+ TRADUCTIONS :
+ 
+ Toutes les chaînes de caractères utilisent le système Symfony
+ Translation avec les clés définies dans messages.fr.yaml
+-->
+<div class="share-modal-overlay" id="shareModalOverlay">
+    <div class="share-modal" id="shareModal">
+        <!-- 
+         EN-TÊTE DU MODAL
+         -
+         Header fixe avec titre traduit et icône représentative.
+         Le titre utilise les traductions Symfony pour l'internationalisation.
+        -->
+        <div class="share-modal-header">
+            <h3 class="share-modal-title">
+                <i class="fa fa-share-alt"></i>
+                {{ 'share_modal.title'|trans }}
+            </h3>
+        </div>
+
+        <!-- 
+         ZONE D'APERÇU DU CONTENU
+        
+         Section dédiée à l'affichage des métadonnées de la page à partager.
+         Permet à l'utilisateur de visualiser ce qui sera partagé avant confirmation.
+         
+         Éléments dynamiques (peuplés par JavaScript) :
+         - sharePreviewTitle : Titre de la page
+         - sharePreviewDescription : Description meta ou excerpt
+         - sharePreviewUrl : URL complète de la page
+         - sharePreviewIcon : Icône ou miniature de la page
+        -->
+        <div class="share-preview" id="sharePreview">
+            <div class="share-preview-image">
+                <i class="fa fa-globe" id="sharePreviewIcon"></i>
+            </div>
+            <div class="share-preview-content">
+                <div class="share-preview-title" id="sharePreviewTitle">
+                    {{ 'share_modal.preview.title'|trans }}
+                </div>
+                <div class="share-preview-description" id="sharePreviewDescription">
+                    {{ 'share_modal.preview.description'|trans }}
+                </div>
+                <div class="share-preview-url" id="sharePreviewUrl">
+                    https://datauemoa.org
+                </div>
+            </div>
+        </div>
+
+        <!-- 
+         GRILLE D'OPTIONS DE PARTAGE
+
+         Conteneur principal organisant les options de partage en grille responsive.
+         Chaque option peut être simple (clic direct) ou complexe (avec sous-menu).
+         
+         Organisation :
+         - Options avec sous-menus : Facebook, Instagram, Telegram
+         - Options directes : X, Copier le lien
+         
+         Classes CSS importantes :
+         - share-options : Conteneur grille principal
+         - share-option-group : Groupe option + sous-menu
+         - share-option : Bouton individuel d'action
+         - share-submenu : Sous-menu contextuel
+        -->
+        <div class="share-options">
+            <!-- 
+             FACEBOOK - GROUPE AVEC SOUS-MENU
+             
+             Plateforme Facebook avec 3 options de partage :
+             1. Post : Publication classique sur le timeline
+             2. Story : Partage en story temporaire (24h)
+             3. Messenger : Envoi via messagerie Facebook
+             
+             Mécanisme hover :
+             - Survol du bouton principal → affichage du sous-menu
+             - Pont invisible CSS pour éviter le scintillement
+             - Animation slideInSubmenu avec courbe de Bézier
+             
+             Données attributs :
+             - data-platform="facebook" : Identification plateforme
+             - data-type="post|story" : Type de partage spécifique
+            -->
+            <div class="share-option-group">
+                <div class="share-option facebook-main" data-platform="facebook">
+                    <i class="fab fa-facebook-f"></i>
+                    <span class="share-label">{{ 'share_modal.networks.facebook'|trans }}</span>
+                    <i class="fa fa-chevron-right submenu-arrow"></i>
+                </div>
+                <!-- Sous-menu Facebook avec options spécialisées -->
+                <div class="share-submenu facebook-submenu">
+                    <!-- Publication Facebook standard -->
+                    <div class="share-option facebook" data-platform="facebook" data-type="post">
+                        <i class="fab fa-facebook-f"></i>
+                        <span class="share-label">{{ 'share_modal.types.post'|trans }}</span>
+                    </div>
+                    <!-- Story Facebook temporaire -->
+                    <div class="share-option facebook" data-platform="facebook" data-type="story">
+                        <i class="fab fa-facebook"></i>
+                        <span class="share-label">{{ 'share_modal.types.story'|trans }}</span>
+                    </div>
+                    <!-- Messenger Facebook -->
+                    <div class="share-option messenger" data-platform="messenger" data-type="chat">
+                        <i class="fab fa-facebook-messenger"></i>
+                        <span class="share-label">{{ 'share_modal.types.messenger'|trans }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 
+             INSTAGRAM - GROUPE AVEC SOUS-MENU
+             -
+             Plateforme Instagram avec options de partage variées :
+             1. Post : Publication permanente sur le feed
+             2. Story : Partage en story temporaire (24h)
+             3. Chat : Envoi via messages directs Instagram
+             
+             Particularité Instagram :
+             - Pas d'API de partage direct (limitation plateforme)
+             - Copie du lien + notification utilisateur
+             - Redirection manuelle vers l'application Instagram
+            -->
+            <div class="share-option-group">
+                <div class="share-option instagram-main" data-platform="instagram">
+                    <i class="fab fa-instagram"></i>
+                    <span class="share-label">{{ 'share_modal.networks.instagram'|trans }}</span>
+                    <i class="fa fa-chevron-right submenu-arrow"></i>
+                </div>
+                <!-- Sous-menu Instagram avec options créatives -->
+                <div class="share-submenu instagram-submenu">
+                    <!-- Publication Instagram standard -->
+                    <div class="share-option instagram" data-platform="instagram" data-type="post">
+                        <i class="fab fa-instagram"></i>
+                        <span class="share-label">{{ 'share_modal.types.post'|trans }}</span>
+                    </div>
+                    <!-- Story Instagram temporaire -->
+                    <div class="share-option instagram" data-platform="instagram" data-type="story">
+                        <i class="fab fa-instagram"></i>
+                        <span class="share-label">{{ 'share_modal.types.story'|trans }}</span>
+                    </div>
+                    <!-- Messages directs Instagram -->
+                    <div class="share-option instagram" data-platform="instagram" data-type="chat">
+                        <i class="fab fa-instagram"></i>
+                        <span class="share-label">{{ 'share_modal.types.chat'|trans }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 
+             TELEGRAM - GROUPE AVEC SOUS-MENU
+             
+             Plateforme Telegram avec options de communication :
+             1. Story : Partage en story visible par les contacts
+             2. Chat : Envoi dans une conversation spécifique
+             
+             Avantages Telegram :
+             - API de partage robuste et fiable
+             - Support natif des liens et métadonnées
+             - Partage instantané sans étapes supplémentaires
+            -->
+            <div class="share-option-group">
+                <div class="share-option telegram-main" data-platform="telegram">
+                    <i class="fab fa-telegram-plane"></i>
+                    <span class="share-label">{{ 'share_modal.networks.telegram'|trans }}</span>
+                    <i class="fa fa-chevron-right submenu-arrow"></i>
+                </div>
+                <!-- Sous-menu Telegram avec options de communication -->
+                <div class="share-submenu telegram-submenu">
+                    <!-- Story Telegram visible par les contacts -->
+                    <div class="share-option telegram" data-platform="telegram" data-type="story">
+                        <i class="fab fa-telegram"></i>
+                        <span class="share-label">{{ 'share_modal.types.story'|trans }}</span>
+                    </div>
+                    <!-- Chat Telegram dans conversation -->
+                    <div class="share-option telegram" data-platform="telegram" data-type="chat">
+                        <i class="fab fa-telegram-plane"></i>
+                        <span class="share-label">{{ 'share_modal.types.chat'|trans }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 
+             X (TWITTER) - OPTION DIRECTE
+             
+             Partage simplifié sur la plateforme X (anciennement Twitter).
+             Action directe sans sous-menu, ouverture immédiate de l'interface
+             de composition avec le texte et l'URL pré-remplis.
+             
+             Caractéristiques :
+             - Limitation de caractères automatique (280 max)
+             - Formatage intelligent du texte de partage
+             - Ouverture dans nouvelle fenêtre/onglet
+             - Couleurs de branding X : noir et blanc
+            -->
+            <div class="share-option x-option" data-platform="x" data-type="post">
+                <i class="fa-brands fa-x-twitter"></i>
+                <span class="share-label">{{ 'share_modal.networks.x'|trans }}</span>
+            </div>
+
+            <!-- 
+             COPIER LE LIEN - OPTION DIRECTE
+
+             Fonctionnalité de copie du lien dans le presse-papiers système.
+             Utilise l'API Clipboard moderne avec fallback pour compatibilité.
+             
+             Mécanisme :
+             1. Tentative avec navigator.clipboard.writeText() (moderne)
+             2. Fallback avec document.execCommand('copy') (ancien)
+             3. Notification visuelle de succès/échec
+             4. Message d'erreur si échec complet
+             
+             UX :
+             - Couleur cyan pour différenciation
+             - Animation de confirmation
+             - Message temporaire de succès
+            -->
+            <div class="share-option copy-link" data-platform="clipboard" data-type="copy">
+                <i class="fa fa-copy"></i>
+                <span class="share-label">{{ 'share_modal.networks.link'|trans }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 
+ ====================================================================
+ SECTION 2 : ÉLÉMENTS DE FEEDBACK UTILISATEUR
+ ====================================================================
+ 
+ Composants dédiés au retour d'information pour les actions utilisateur.
+ Fournissent des confirmations visuelles et messages d'état.
+-->
+
+<!-- 
+ NOTIFICATION DE COPIE
+ -
+ Élément de notification temporaire qui s'affiche lors de la copie
+ d'un lien dans le presse-papiers. Utilise une animation CSS pour
+ apparaître depuis le haut de l'écran.
+ 
+ Comportement :
+ - Apparition automatique lors d'une copie réussie
+ - Disparition automatique après 3 secondes
+ - Style toast moderne avec icône de validation
+ - Message traduit dynamiquement
+ 
+ Classes CSS :
+ - copy-notification : Style de base de la notification
+ - Animations : slideInFromTop et slideOutToTop
+-->
+<div class="copy-notification" id="copyNotification">
+    <i class="fa fa-check"></i>
+    {{ 'share_modal.notifications.link_copied'|trans }}
+</div>
+
