@@ -19,6 +19,70 @@
  * @since    2025-06-26
  */
 
+ /**
+ * ANIMATIONS DU MODAL
+ * ===================
+ * 
+ * Animations pour l'apparition et la disparition du modal.
+ */
+@keyframes fadeInModals {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Animation d'entrée du modal avec effet de glissement et zoom */
+@keyframes slideInModals {
+    from { 
+        transform: translate(-50%, -50%) scale(0.9);
+        opacity: 0;
+    }
+    to { 
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}
+
+/* Animation de sortie du modal avec effet de glissement et zoom */
+@keyframes slideInRightNotif {
+	from {
+		transform: translateX(100%);
+		opacity: 0;
+	}
+	to {
+		transform: translateX(0);
+		opacity: 1;
+	}
+}
+
+/* Animation de sortie du modal avec effet de glissement vers la droite */
+@keyframes slideOutRightNotif {
+	from {
+		transform: translateX(0);
+		opacity: 1;
+	}
+	to {
+		transform: translateX(100%);
+		opacity: 0;
+	}
+}
+
+/* Animation de pulsation pour les boutons de la Favoris/ */
+@keyframes fadeInModalBookmarks {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+@keyframes slideInfadeInModal {
+	from { 
+		transform: translate(-50%, -50%) scale(0.9);
+		opacity: 0;
+	}
+	to { 
+		transform: translate(-50%, -50%) scale(1);
+		opacity: 1;
+	}
+}
+
 /**
  * OVERLAY DU MODAL - Arrière-plan semi-transparent
  * ===============================================
@@ -552,10 +616,45 @@
 	transform: rotate(-90deg) !important; /* Pointe vers le haut par défaut */
 }
 
+/* Flèches spécifiques par plateforme avec leurs couleurs de branding */
+.facebook-main .submenu-arrow {
+	color: rgba(24, 119, 242, 0.8) !important; /* Couleur Facebook semi-transparente */
+	filter: drop-shadow(0 0 4px rgba(24, 119, 242, 0.4)) !important; /* Ombre bleue Facebook */
+}
+
+.instagram-main .submenu-arrow {
+	color: rgba(228, 64, 95, 0.8) !important; /* Couleur Instagram semi-transparente */
+	filter: drop-shadow(0 0 4px rgba(228, 64, 95, 0.4)) !important; /* Ombre rose Instagram */
+}
+
+.telegram-main .submenu-arrow {
+	color: rgba(0, 136, 204, 0.8) !important; /* Couleur Telegram semi-transparente */
+	filter: drop-shadow(0 0 4px rgba(0, 136, 204, 0.4)) !important; /* Ombre bleue Telegram */
+}
+
 /* Effet de survol sur la flèche */
 .share-option-group:hover .submenu-arrow {
 	color: rgba(255, 255, 255, 0.9) !important; /* Plus visible au survol */
 	transform: rotate(-90deg) scale(1.1) !important; /* Maintient la direction vers le haut avec une légère augmentation */
+}
+
+/* Effets de survol spécifiques par plateforme */
+.share-option-group:hover .facebook-main .submenu-arrow {
+	color: #1877f2 !important; /* Couleur Facebook complète au survol */
+	filter: drop-shadow(0 0 6px rgba(24, 119, 242, 0.6)) brightness(1.2) !important; /* Ombre plus intense et luminosité */
+	transform: rotate(-90deg) scale(1.2) !important; /* Augmentation plus prononcée */
+}
+
+.share-option-group:hover .instagram-main .submenu-arrow {
+	color: #e4405f !important; /* Couleur Instagram complète au survol */
+	filter: drop-shadow(0 0 6px rgba(228, 64, 95, 0.6)) brightness(1.2) saturate(1.3) !important; /* Ombre plus intense, luminosité et saturation */
+	transform: rotate(-90deg) scale(1.2) !important; /* Augmentation plus prononcée */
+}
+
+.share-option-group:hover .telegram-main .submenu-arrow {
+	color: #0088cc !important; /* Couleur Telegram complète au survol */
+	filter: drop-shadow(0 0 6px rgba(0, 136, 204, 0.6)) brightness(1.2) !important; /* Ombre plus intense et luminosité */
+	transform: rotate(-90deg) scale(1.2) !important; /* Augmentation plus prononcée */
 }
 
 /**
@@ -622,6 +721,42 @@
 	border-color: inherit; /* Maintenir la couleur de bordure */
 	background-color: inherit; /* Maintenir la couleur d'arrière-plan */
 	transform: translateY(-2px); /* Maintenir l'élévation */
+}
+
+/* Activer les effets hover spécifiques pour chaque plateforme lors du survol du groupe */
+.share-option-group:hover .facebook-main {
+	border-color: #1877f2 !important; /* Bordure bleue Facebook */
+	background-color: rgba(24, 119, 242, 0.1) !important; /* Arrière-plan bleu semi-transparent */
+	transform: translateY(-2px) !important; /* Élévation subtile */
+}
+
+.share-option-group:hover .facebook-main i {
+	color: #1877f2 !important; /* Icône bleue Facebook */
+	filter: brightness(1.2) !important; /* Luminosité augmentée */
+	transform: scale(1.1) !important; /* Augmentation de taille */
+}
+
+.share-option-group:hover .instagram-main {
+	border-color: #e4405f !important; /* Bordure rose Instagram */
+	background-color: rgba(228, 64, 95, 0.1) !important; /* Arrière-plan rose semi-transparent */
+	transform: translateY(-2px) !important; /* Élévation subtile */
+}
+
+.share-option-group:hover .instagram-main i {
+	filter: brightness(1.3) saturate(1.2) !important; /* Luminosité et saturation augmentées */
+	transform: scale(1.1) !important; /* Augmentation de taille */
+}
+
+.share-option-group:hover .telegram-main {
+	border-color: #0088cc !important; /* Bordure bleue Telegram */
+	background-color: rgba(0, 136, 204, 0.1) !important; /* Arrière-plan bleu semi-transparent */
+	transform: translateY(-2px) !important; /* Élévation subtile */
+}
+
+.share-option-group:hover .telegram-main i {
+	color: #0088cc !important; /* Icône bleue Telegram */
+	filter: brightness(1.2) !important; /* Luminosité augmentée */
+	transform: scale(1.1) !important; /* Augmentation de taille */
 }
 
 /**
@@ -808,7 +943,7 @@
 }
 
 .facebook-submenu .share-option[data-platform='facebook'][data-type='story'] i {
-	color: #42b883; /* Vert pour Stories */
+	color: #4297b8; /* Vert pour Stories */
 }
 
 .facebook-submenu .share-option[data-platform='messenger'] i {
@@ -830,19 +965,23 @@
 }
 
 /* Sous-menu Instagram - Options spécifiques */
-.instagram-submenu .share-option[data-platform='instagram'][data-type='post'] i {
+.instagram-submenu .share-option[data-platform='instagram'][data-type='post'][data-type='story'][data-type='chat'] i {
 	background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 	background-clip: text;
 }
 
+.instagram-submenu .share-option[data-platform='instagram'][data-type='post'] i {
+	color: #e6683c; /* Orange pour Posts */
+}
+
 .instagram-submenu .share-option[data-platform='instagram'][data-type='story'] i {
-	color: #ff6b35; /* Orange pour Stories */
+	color: #cc2366; /* Rose pour Stories */
 }
 
 .instagram-submenu .share-option[data-platform='instagram'][data-type='chat'] i {
-	color: #833ab4; /* Violet pour Chat */
+	color: #bc1888; /* Violet pour Chat */
 }
 
 /* Survol pour sous-menu Instagram */
@@ -874,4 +1013,198 @@
 .telegram-submenu .share-option:hover i {
 	filter: brightness(1.2); /* Luminosité augmentée */
 	transform: scale(1.05); /* Augmentation de taille */
+}
+
+/**
+ * FAVORIS CSS
+ * ===================================
+ *
+ */
+ 
+ .bookmark-icon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.bookmark-icon:hover {
+    background: rgba(37, 99, 235, 0.1);
+    transform: scale(1.1);
+}
+
+.bookmark-icon.active {
+    background: #2563eb;
+    color: white;
+}
+
+.bookmark-icon i {
+    font-size: 16px;
+    color: #6b7280;
+}
+
+.bookmark-icon.active i {
+    color: white;
+}
+
+.section-with-bookmark {
+    position: relative;
+}
+
+/**
+ * 
+*/
+.modal-overlay {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.5);
+	z-index: 1000;
+	animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background: white;
+	padding: 2rem;
+	border-radius: 12px;
+	box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+	max-width: 500px;
+	width: 90%;
+	animation: slideIn 0.3s ease;
+}
+
+
+
+.modal-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 1.5rem;
+	padding-bottom: 1rem;
+	border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-title {
+	font-size: 1.5rem;
+	font-weight: 600;
+	color: #1f2937;
+	margin: 0;
+}
+
+.modal-close {
+	background: none;
+	border: none;
+	font-size: 1.5rem;
+	color: #6b7280;
+	cursor: pointer;
+	padding: 0;
+	width: 30px;
+	height: 30px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.modal-close:hover {
+	color: #374151;
+}
+
+.form-group {
+	margin-bottom: 1rem;
+}
+
+.form-label {
+	display: block;
+	margin-bottom: 0.5rem;
+	font-weight: 500;
+	color: #374151;
+}
+
+.form-input {
+	width: 100%;
+	padding: 0.75rem;
+	border: 1px solid #d1d5db;
+	border-radius: 8px;
+	font-size: 1rem;
+	transition: border-color 0.3s ease;
+}
+
+.form-input:focus {
+	outline: none;
+	border-color: #2563eb;
+	box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.btn-primary {
+	background: #2563eb;
+	color: white;
+	border: none;
+	padding: 0.75rem 1.5rem;
+	border-radius: 8px;
+	font-weight: 500;
+	cursor: pointer;
+	transition: background 0.3s ease;
+	width: 100%;
+}
+
+.btn-primary:hover {
+	background: #1d4ed8;
+}
+
+.btn-secondary {
+	background: #6b7280;
+	color: white;
+	border: none;
+	padding: 0.75rem 1.5rem;
+	border-radius: 8px;
+	font-weight: 500;
+	cursor: pointer;
+	transition: background 0.3s ease;
+	width: 100%;
+	margin-top: 0.5rem;
+}
+
+.btn-secondary:hover {
+	background: #4b5563;
+}
+
+.divider {
+	text-align: center;
+	margin: 1.5rem 0;
+	position: relative;
+}
+
+.divider::before {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 0;
+	right: 0;
+	height: 1px;
+	background: #e5e7eb;
+}
+
+.divider span {
+	background: white;
+	padding: 0 1rem;
+	color: #6b7280;
+	font-size: 0.875rem;
 }

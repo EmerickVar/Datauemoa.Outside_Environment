@@ -32,9 +32,12 @@
 	if (window.QuickActionsBarModule) {
 		console.warn('QuickActionsBar module already loaded, skipping...');
 		return;
+	} else {
+		// Marquer le module comme chargé
+		console.warn('QuickActionsBar module loaded successfully!');
 	}
 
-	// Marcar el módulo como cargado
+	// Marque le module comme chargé globalement
 	window.QuickActionsBarModule = true;
 
 	/**
@@ -67,7 +70,14 @@
 	 *
 	 * @type {boolean} État d'expansion (true = ouvert, false = fermé)
 	 */
-	isQuickActionsBarExpanded = false;
+	let isQuickActionsBarExpanded = false; // État initial de la barre d'actions
+	let isToggleInProgress = false; // Flag pour éviter les clics multiples pendant l'animation
+
+	// Exposer l'état global pour l'usage dans HTML onclick
+	window.isQuickActionsBarExpanded = isQuickActionsBarExpanded;
+
+	// Exposer le flag pour l'usage dans HTML onclick
+	window.isToggleInProgress = isToggleInProgress;
 
 	/**
 	 * FONCTION TOGGLE PRINCIPALE
@@ -87,15 +97,40 @@
 	 * @returns {void}
 	 */
 	function toggleQuickActionsBar() {
+		// Prevenir les clics multiples pendant l'animation
+		if (isToggleInProgress) {
+			console.log('QuickActionsBar: Toggle déjà en cours, ignorer le clic');
+			return;
+		} else {
+			console.log('QuickActionsBar: Toggle en cours, traitement du clic');
+		}
+
 		// Sélection des éléments DOM nécessaires
 		const toggleButton = document.querySelector('.toggle-qab'); // Bouton de contrôle principal
 		// Inclure tous les éléments sauf la bascule pour les animations
 		const items = document.querySelectorAll('.QuickActionsBar-item:not(.toggle-qab)'); // Inclure tous les éléments sauf la bascule
 
+		// Validation critique : vérifier que les éléments existent
+		if (!toggleButton) {
+			console.error('QuickActionsBar: Bouton toggle introuvable (.toggle-qab)');
+			return;
+		}
+
+		if (!items || items.length === 0) {
+			console.warn('QuickActionsBar: Aucun élément trouvé (.QuickActionsBar-item:not(.toggle-qab))');
+			return;
+		}
+
+		// Marquer le début de l'animation
+		isToggleInProgress = true;
+
 		// Inversion de l'état d'expansion
 		isQuickActionsBarExpanded = !isQuickActionsBarExpanded;
 
-		if (isQuickActionsBarExpanded) {
+		// Mettre à jour la variable globale exposée
+		window.isQuickActionsBarExpanded = isQuickActionsBarExpanded;
+
+		if (window.isQuickActionsBarExpanded) {
 			/**
 			 * PHASE D'EXPANSION - Affichage des éléments
 			 * =========================================
@@ -108,9 +143,9 @@
 					// Rend l'élément visible dans le DOM
 					item.removeAttribute('hidden');
 
-					// État initial de l'animation (invisible et décalé)
+					// État initial de l'animation (invisible et décalé vers la gauche)
 					item.style.opacity = '0';
-					item.style.transform = 'translateX(30px) scale(0.8)';
+					item.style.transform = 'translateX(-30px) scale(0.8)';
 
 					// Animation d'entrée fluide
 					requestAnimationFrame(() => {
@@ -123,11 +158,21 @@
 
 			// Mise à jour de l'interface du bouton toggle
 			const toggleIcon = toggleButton.querySelector('i');
-			toggleIcon.className = 'fa fa-times'; // Change l'icône vers une croix
+			if (toggleIcon) {
+				toggleIcon.className = 'fa fa-times'; // Change l'icône vers une croix
+			} else {
+				console.warn('QuickActionsBar: Icône du bouton toggle introuvable (i)');
+			}
+
 			toggleButton.setAttribute(
 				'data-tooltip',
 				window.QuickActionsBarTranslations?.fermerActions || 'Fermer les actions',
 			); // Met à jour le tooltip
+
+			// Débloquer après que l'animation la plus longue soit terminée
+			setTimeout(() => {
+				isToggleInProgress = false;
+			}, items.length * 150 + 500); // Durée totale des animations + marge de sécurité
 		} else {
 			/**
 			 * PHASE DE RÉDUCTION - Masquage des éléments
@@ -142,7 +187,7 @@
 					// Animation de sortie plus rapide
 					item.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
 					item.style.opacity = '0'; // Devient invisible
-					item.style.transform = 'translateX(30px) scale(0.8)'; // Décalage et réduction
+					item.style.transform = 'translateX(-30px) scale(0.8)'; // Décalage vers la gauche et réduction
 
 					// Masquage complet après l'animation
 					setTimeout(() => {
@@ -153,11 +198,21 @@
 
 			// Restauration de l'interface du bouton toggle
 			const toggleIcon = toggleButton.querySelector('i');
-			toggleIcon.className = 'fa fa-bolt'; // Restaure l'icône éclair
+			if (toggleIcon) {
+				toggleIcon.className = 'fa fa-bolt'; // Restaure l'icône éclair
+			} else {
+				console.warn('QuickActionsBar: Icône du bouton toggle introuvable (i) lors de la fermeture');
+			}
+
 			toggleButton.setAttribute(
 				'data-tooltip',
 				window.QuickActionsBarTranslations?.actionsRapides || 'Actions rapides !',
 			); // Restaure le tooltip original
+
+			// Débloquer après que l'animation la plus longue soit terminée
+			setTimeout(() => {
+				isToggleInProgress = false;
+			}, reversedItems.length * 150 + 300); // Durée totale des animations + marge de sécurité
 		}
 	}
 

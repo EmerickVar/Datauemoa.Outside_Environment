@@ -56,7 +56,7 @@ quickactionsbar:
     actions_rapides: 'Actions rapides !'
     fermer_actions: 'Fermer les actions'
     tableau_de_bord: 'Tableau de bord'
-    signets: 'Signets'
+    favoris: 'Favoris'
     partager: 'Partager'
     notifications: 'Notifications'
     api: 'API'

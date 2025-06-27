@@ -19,6 +19,59 @@
  * @since    2025-06-26
  */
 
+ /**
+ * ANIMATIONS - Définitions d'animations CSS
+ * ========================================
+ * 
+ * Ensemble d'animations réutilisables pour créer des effets visuels
+ * fluides et professionnels lors de l'apparition et interaction
+ * avec les éléments de la barre d'actions.
+ */
+
+/**
+ * Animation slideInQuickActionsBar - Entrée en glissement
+ * Fait apparaître les éléments avec un glissement depuis la gauche
+ */
+@keyframes slideInQuickActionsBar {
+	from {
+		opacity: 0;                                     /* Début invisible */
+		transform: translateX(-30px);                   /* Décalage initial vers la gauche */
+	}
+	to {
+		opacity: 1;                                     /* Devient visible */
+		transform: translateX(0);                       /* Position finale normale */
+	}
+}
+
+/**
+ * Animation fadeInQuickActionsBar - Apparition en fondu
+ * Fait apparaître les éléments avec un fondu
+ */
+ @keyframes fadeInQuickActionsBar {
+	from {
+		opacity: 0;                                     /* Début invisible */
+	}
+	to {
+		opacity: 1;                                     /* Devient visible */
+	}
+ }
+
+ /**
+ * Animation pulseQuickActionsBar - Effet de pulsation
+ * Animation de mise à l'échelle pour créer un effet de pulsation
+ */
+@keyframes pulseQuickActionsBar {
+	0% {
+		transform: scale(1.2);                          /* Taille initiale légèrement agrandie */
+	}
+	50% {
+		transform: scale(1.4);                          /* Agrandissement maximal */
+	}
+	100% {
+		transform: scale(1.2);                          /* Retour à la taille initiale */
+	}
+}
+
 /**
  * CONTENEUR PRINCIPAL - QuickActionsBar
  * ====================================
@@ -290,56 +343,16 @@
 	color: #fff;                                        /* Conserve la couleur blanche */
 }
 
-/**
- * ANIMATIONS - Définitions d'animations CSS
- * ========================================
- * 
- * Ensemble d'animations réutilisables pour créer des effets visuels
- * fluides et professionnels lors de l'apparition et interaction
- * avec les éléments de la barre d'actions.
- */
-
-/**
- * Animation slideIn - Entrée en glissement
- * Fait apparaître les éléments avec un glissement depuis la droite
- */
-@keyframes slideIn {
-	from {
-		opacity: 0;                                     /* Début invisible */
-		transform: translateX(30px);                    /* Décalage initial vers la droite */
-	}
-	to {
-		opacity: 1;                                     /* Devient visible */
-		transform: translateX(0);                       /* Position finale normale */
-	}
-}
-
 /* Application de l'animation d'entrée aux boutons */
 .QuickActionsBar-item {
-	animation: slideIn 0.3s ease forwards;             /* Animation de 0.3s avec maintien de l'état final */
+	animation: slideInQuickActionsBar 0.3s ease forwards;             /* Animation de 0.3s avec maintien de l'état final */
 	animation-delay: calc(var(--item-index) * 0.1s);   /* Délai calculé selon l'index CSS */
 	opacity: 0;                                         /* État initial invisible */
 }
 
-/**
- * Animation pulse - Effet de pulsation
- * Animation de mise à l'échelle pour créer un effet de pulsation
- */
-@keyframes pulse {
-	0% {
-		transform: scale(1.1);                          /* Taille initiale légèrement agrandie */
-	}
-	50% {
-		transform: scale(1.2);                          /* Agrandissement maximal */
-	}
-	100% {
-		transform: scale(1.1);                          /* Retour à la taille initiale */
-	}
-}
-
-/* Application de l'animation pulse au bouton toggle lors du clic */
+/* Application de l'animation pulseQuickActionsBar au bouton toggle lors du clic */
 .QuickActionsBar-item.toggle-qab:active {
-	animation: pulse 0.3s ease;                         /* Animation de pulsation de 0.3s */
+	animation: pulseQuickActionsBar 0.3s ease;                         /* Animation de pulsation de 0.3s */
 }
 
 /* Responsive */

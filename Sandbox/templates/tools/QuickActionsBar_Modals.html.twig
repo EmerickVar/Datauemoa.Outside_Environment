@@ -295,3 +295,279 @@
     {{ 'share_modal.notifications.link_copied'|trans }}
 </div>
 
+<!-- 
+ ====================================================================
+ SECTION 3 : MODULE DE FAVORIS MODAL
+ ====================================================================
+ 
+ Modal sophistiqué pour la gestion des favoris/favoris avec système
+ d'authentification intégré. Permet aux utilisateurs de sauvegarder
+ et organiser leurs contenus préférés avec notifications optionnelles.
+ 
+ ARCHITECTURE DU MODULE :
+ 
+ 1. Overlay modal avec fermeture au clic extérieur
+ 2. Conteneur principal avec header et formulaires dynamiques
+ 3. Formulaire de connexion rapide avec email
+ 4. Formulaire d'inscription complet
+ 5. Système de basculement entre vues
+ 
+ FLUX UTILISATEUR :
+ 
+ • Non connecté → Demande d'email ou inscription
+ • Email fourni → Sauvegarde directe du favori
+ • Inscription → Création de compte avec profil
+ • Connecté → Ajout immédiat aux favoris
+ 
+ FONCTIONNALITÉS PRINCIPALES :
+ 
+ • Sauvegarde persistante des favoris
+ • Notifications par email (optionnel)
+ • Synchronisation multi-appareils
+ • Organisation par catégories (futur)
+ • Export/Import des favoris (futur)
+ 
+ SÉCURITÉ ET VALIDATION :
+ 
+ • Validation email côté client et serveur
+ • Protection CSRF pour les formulaires
+ • Limitation de taux pour éviter le spam
+ • Hachage sécurisé des données sensibles
+ 
+ ÉVÉNEMENTS JAVASCRIPT :
+ 
+ • Ouverture : openBookmarkModal()
+ • Fermeture : closeBookmarkModal()
+ • Sauvegarde : saveBookmark()
+ • Inscription : registerUser()
+ • Basculement : toggleForms()
+ 
+ INTÉGRATION API :
+ 
+ Endpoints REST pour la gestion des favoris :
+ • POST /api/bookmarks/save
+ • POST /api/users/register
+ • GET /api/bookmarks/user/{id}
+ • DELETE /api/bookmarks/{id}
+-->
+<div id="bookmarkModal" class="modal-overlay">
+    <!-- 
+        CONTENEUR PRINCIPAL DU MODAL
+        
+        Structure centrale contenant tous les éléments du modal favoris.
+        Applique les styles de base et gère le positionnement centré.
+        
+        Classes CSS :
+        - modal-overlay : Fond semi-transparent avec z-index élevé
+        - modal-content : Boîte blanche centrale avec ombres
+        
+        Accessibilité :
+        - role="dialog" (à ajouter)
+        - aria-labelledby="modalTitle" (à ajouter)
+        - Focus trap pour navigation clavier
+    -->
+    <div class="modal-content">
+        <!-- 
+            EN-TÊTE DU MODAL
+            
+            Barre de titre fixe avec bouton de fermeture accessible.
+            Utilise une icône × standard pour la cohérence UX.
+            
+            Éléments :
+            - modal-title : Titre principal H3 pour hiérarchie
+            - modal-close : Bouton fermeture avec hover state
+            
+            Comportement :
+            - Clic sur × → fermeture immédiate
+            - Touche Escape → fermeture (à implémenter)
+        -->
+        <div class="modal-header">
+            <h3 class="modal-title">Enregistrer dans les favoris</h3>
+            <button class="modal-close" id="closeModal">×</button>
+        </div>
+        
+        <!-- 
+            FORMULAIRE DE CONNEXION RAPIDE
+            
+            Vue par défaut pour les utilisateurs non authentifiés.
+            Propose une connexion simplifiée par email uniquement
+            ou redirection vers inscription complète.
+            
+            Structure :
+            1. Message explicatif des bénéfices
+            2. Champ email avec validation HTML5
+            3. Bouton principal de sauvegarde
+            4. Séparateur visuel élégant
+            5. Option d'inscription alternative
+            
+            Validation :
+            - Type="email" pour validation native
+            - Required pour champ obligatoire
+            - Pattern regex côté JS (à ajouter)
+            - Message d'erreur contextuel
+        -->
+        <div id="loginForm">
+            <!-- 
+                MESSAGE D'INTRODUCTION
+                
+                Texte explicatif informant l'utilisateur des avantages
+                de fournir son email : sauvegarde permanente et notifications.
+                
+                Styling :
+                - text-muted : Couleur grise douce
+                - mb-3 : Marge bottom spacing
+            -->
+            <p class="text-muted mb-3">Pour enregistrer cet élément dans vos favoris et/ou recevoir des notifications à ce sujet, vous devrez fournir votre adresse e-mail ou vous inscrire.</p>
+            
+            <!-- 
+                CHAMP EMAIL PRINCIPAL
+                
+                Input email avec label accessible et placeholder indicatif.
+                Utilise la validation HTML5 native pour simplicité.
+                
+                Attributs importants :
+                - type="email" : Validation format email
+                - required : Champ obligatoire
+                - placeholder : Exemple de format attendu
+                - id unique pour association label
+                
+                États visuels :
+                - Normal : Bordure grise
+                - Focus : Bordure bleue + ombre
+                - Erreur : Bordure rouge + message
+            -->
+            <div class="form-group">
+                <label class="form-label" for="userEmail">E-mail</label>
+                <input type="email" id="userEmail" class="form-input" placeholder="votre-email@exemple.com" required>
+            </div>
+            
+            <!-- 
+                BOUTON DE SAUVEGARDE PRINCIPAL
+                
+                Action primaire déclenchant la sauvegarde du favori.
+                Si email valide → sauvegarde directe + notification succès.
+                Si email invalide → message d'erreur contextuel.
+                
+                Comportement :
+                1. Validation côté client
+                2. Appel API sauvegarde
+                3. Feedback visuel (spinner)
+                4. Message de confirmation
+                5. Fermeture automatique (optionnel)
+            -->
+            <button id="saveBookmark" class="btn-primary">Enregistrer le favori</button>
+            
+            <!-- 
+                SÉPARATEUR VISUEL
+                
+                Divider élégant séparant les options principales.
+                Utilise le mot "ou" centré avec lignes horizontales.
+                
+                CSS :
+                - Flexbox pour alignement
+                - Pseudo-éléments ::before/::after pour lignes
+                - Couleur grise douce pour subtilité
+            -->
+            <div class="divider">
+                <span>ou</span>
+            </div>
+            
+            <!-- 
+                BOUTON D'INSCRIPTION ALTERNATIVE
+                
+                Option secondaire permettant une inscription complète.
+                Bascule vers le formulaire d'inscription détaillé.
+                
+                Interaction :
+                - Clic → Cache loginForm
+                - Clic → Affiche registrationForm
+                - Animation de transition douce
+            -->
+            <button id="registerUser" class="btn-secondary">S'inscrire</button>
+        </div>
+        
+        <!-- 
+            FORMULAIRE D'INSCRIPTION COMPLET
+            
+            Vue alternative pour création de compte utilisateur.
+            Collecte les informations minimales nécessaires pour
+            un profil basique avec possibilité d'enrichissement futur.
+            
+            Champs requis :
+            - Email : Identifiant unique + notifications
+            - Nom : Personnalisation de l'expérience
+            
+            Champs optionnels (futurs) :
+            - Photo de profil
+            - Préférences de notifications
+            - Catégories d'intérêt
+            - Langue préférée
+            
+            Sécurité :
+            - Validation double (client + serveur)
+            - Captcha si nécessaire (anti-spam)
+            - Email de confirmation
+            - Politique de confidentialité
+        -->
+        <div id="registrationForm" style="display: none;">
+            <!-- 
+                MESSAGE D'ACCUEIL INSCRIPTION
+                
+                Texte rassurant indiquant la rapidité du processus.
+                Emphasise sur la simplicité pour réduire l'abandon.
+            -->
+            <p class="text-muted mb-3">Inscription rapide pour accéder à vos favoris.</p>
+            
+            <!-- 
+                CHAMP EMAIL D'INSCRIPTION
+                
+                Similaire au champ de connexion mais dans contexte
+                d'inscription. Peut être pré-rempli si utilisateur
+                a déjà saisi un email dans l'autre formulaire.
+                
+                Validation supplémentaire :
+                - Vérification unicité (API)
+                - Format strict (RFC 5322)
+                - Domaines blacklistés
+            -->
+            <div class="form-group">
+                <label class="form-label" for="regEmail">E-mail</label>
+                <input type="email" id="regEmail" class="form-input" placeholder="votre-email@exemple.com" required>
+            </div>
+            
+            <!-- 
+                CHAMP NOM UTILISATEUR
+                
+                Collecte le nom pour personnalisation de l'interface.
+                Utilisé dans les messages de bienvenue et notifications.
+                
+                Contraintes :
+                - Longueur min/max (2-50 caractères)
+                - Caractères autorisés (lettres, espaces, tirets)
+                - Pas de chiffres au début
+            -->
+            <div class="form-group">
+                <label class="form-label" for="regName">Nom</label>
+                <input type="text" id="regName" class="form-input" placeholder="Votre nom" required>
+            </div>
+
+            <!-- 
+                BOUTONS D'ACTION INSCRIPTION
+                
+                Zone d'actions avec bouton principal de validation
+                et option de retour vers la connexion simple.
+                
+                Flux :
+                - Compléter → Validation + Création compte
+                - Retour → Retour au formulaire de connexion
+                
+                États du bouton principal :
+                - Normal : "Compléter l'inscription"
+                - Loading : Spinner + "Inscription..."
+                - Succès : Checkmark + "Inscrit !"
+            -->
+            <button id="completeRegistration" class="btn-primary">Compléter l'inscription</button>
+            <button id="backToLogin" class="btn-secondary">Retour</button>
+        </div>
+    </div>
+</div>
