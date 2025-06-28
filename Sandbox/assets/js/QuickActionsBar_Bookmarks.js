@@ -14,26 +14,39 @@
 (function () {
 	('use strict');
 
-	// Get current currency pair from URL or from Twig variable
+	// Parse URL for hierarchical categorization
 	const urlPath = window.location.pathname;
-	let currencyPair = '{{ currency_pair.from_currency_code }}-{{ currency_pair.to_currency_code }}';
 
-	// If currency pair is not available from Twig, extract from URL
-	if (
-		!currencyPair ||
-		currencyPair === '-' ||
-		currencyPair === '{{ currency_pair.from_currency_code }}-{{ currency_pair.to_currency_code }}'
-	) {
-		const match = urlPath.match(/\/currencies\/([A-Z]{3})-([A-Z]{3})/i);
-		if (match) {
-			currencyPair = `${match[1].toUpperCase()}-${match[2].toUpperCase()}`;
-		} else {
-			// Default fallback
-			currencyPair = 'EUR-USD';
-		}
+	// Parse URL segments after domain
+	function parseURLSegments() {
+		// Remove leading and trailing slashes, then split
+		const segments = urlPath
+			.replace(/^\/+|\/+$/g, '')
+			.split('/')
+			.filter((segment) => segment.length > 0);
+
+		console.log('🔗 PARSED URL SEGMENTS:', {
+			fullPath: urlPath,
+			segments: segments,
+		});
+
+		return segments;
 	}
 
-	console.log('Currency pair:', currencyPair); // Debug
+	// Get current URL segments for categorization
+	const urlSegments = parseURLSegments();
+
+	// Create bookmark path from URL segments
+	function getBookmarkPath() {
+		if (urlSegments.length === 0) {
+			return ['home']; // Default for root path
+		}
+
+		return urlSegments;
+	}
+
+	const bookmarkPath = getBookmarkPath();
+	console.log('📍 BOOKMARK PATH:', bookmarkPath);
 
 	// Current bookmark being processed
 	let currentBookmark = null;
@@ -131,7 +144,67 @@
 		});
 	}
 
-	// Bookmark management functions
+	// Utility functions for hierarchical bookmark structure
+	function createNestedPath(obj, pathArray) {
+		let current = obj;
+		for (let i = 0; i < pathArray.length; i++) {
+			const segment = pathArray[i];
+			if (!current[segment]) {
+				// If it's the last segment, create an array; otherwise, create an object
+				current[segment] = i === pathArray.length - 1 ? [] : {};
+			}
+			current = current[segment];
+		}
+		return current;
+	}
+
+	function getNestedPath(obj, pathArray) {
+		let current = obj;
+		for (const segment of pathArray) {
+			if (!current || !current[segment]) {
+				return null;
+			}
+			current = current[segment];
+		}
+		return current;
+	}
+
+	function deleteNestedPath(obj, pathArray) {
+		if (pathArray.length === 0) return false;
+
+		if (pathArray.length === 1) {
+			if (obj[pathArray[0]]) {
+				delete obj[pathArray[0]];
+				return true;
+			}
+			return false;
+		}
+
+		const parentPath = pathArray.slice(0, -1);
+		const lastSegment = pathArray[pathArray.length - 1];
+		const parent = getNestedPath(obj, parentPath);
+
+		if (parent && parent[lastSegment]) {
+			delete parent[lastSegment];
+
+			// Clean up empty parent objects recursively
+			if (typeof parent === 'object' && Object.keys(parent).length === 0) {
+				return deleteNestedPath(obj, parentPath);
+			}
+			return true;
+		}
+		return false;
+	}
+
+	function buildBookmarkKey(pathArray, type) {
+		return [...pathArray, type];
+	}
+
+	function buildMetadataKey(pathArray, type) {
+		return pathArray.join('/') + '/' + type;
+	}
+
+	// Bookmark management functions with new hierarchical structure
 	function getUserBookmarks() {
 		const userData = getUserData();
 		if (!userData.user_email) {
@@ -147,46 +220,66 @@
 		return userData.user_bookmarks;
 	}
 
-	function isBookmarked(type, pair) {
+	function isBookmarked(type, path = bookmarkPath) {
 		const bookmarks = getUserBookmarks();
-		const result = bookmarks[pair] && bookmarks[pair].includes(type);
+		const bookmarkKey = buildBookmarkKey(path, type);
+		const targetArray = getNestedPath(bookmarks, bookmarkKey);
+		const result = Array.isArray(targetArray) && targetArray.length > 0;
 
 		console.log(`📚 CHECK BOOKMARK:`, {
 			type: type,
-			pair: pair,
+			path: path,
+			bookmarkKey: bookmarkKey,
 			isBookmarked: result,
-			pairBookmarks: bookmarks[pair] || [],
+			targetArray: targetArray,
 		});
 
 		return result;
 	}
 
-	function addBookmark(type, name, pair) {
+	function addBookmark(type, name, path = bookmarkPath) {
 		console.log(`📚 ADD BOOKMARK STARTED:`, {
 			type: type,
 			name: name,
-			pair: pair,
+			path: path,
 		});
 
 		const userData = getUserData();
+		const bookmarkKey = buildBookmarkKey(path, type);
 
-		// Initialize bookmarks if not exist
-		if (!userData.user_bookmarks[pair]) {
-			userData.user_bookmarks[pair] = [];
-			console.log(`📚 ADD BOOKMARK: Created new pair array for ${pair}`);
+		// Create nested structure and get the array for this bookmark type
+		const targetArray = createNestedPath(userData.user_bookmarks, bookmarkKey);
+
+		// Check if this specific bookmark already exists
+		if (!Array.isArray(targetArray)) {
+			console.error(`📚 ADD BOOKMARK ERROR: Target is not an array`, {
+				bookmarkKey: bookmarkKey,
+				targetArray: targetArray,
+			});
+			return false;
 		}
 
-		if (!userData.user_bookmarks[pair].includes(type)) {
-			userData.user_bookmarks[pair].push(type);
+		// For now, we'll just add a timestamp to the array (could be enhanced later)
+		const bookmarkEntry = {
+			name: name,
+			timestamp: new Date().toISOString(),
+		};
 
-			// Initialize metadata if not exist
-			if (!userData.bookmark_metadata[pair]) {
-				userData.bookmark_metadata[pair] = {};
+		// Check if bookmark already exists
+		const existingIndex = targetArray.findIndex((entry) => entry.name === name);
+		if (existingIndex === -1) {
+			targetArray.push(bookmarkEntry);
+
+			// Also update metadata with new structure
+			const metadataKey = buildMetadataKey(path, type);
+			if (!userData.bookmark_metadata) {
+				userData.bookmark_metadata = {};
 			}
-
-			userData.bookmark_metadata[pair][type] = {
+			userData.bookmark_metadata[metadataKey] = {
 				name: name,
 				timestamp: new Date().toISOString(),
+				path: path,
+				type: type,
 			};
 
 			saveUserData(userData);
@@ -194,7 +287,8 @@
 			console.log(`📚 ADD BOOKMARK SUCCESS:`, {
 				type: type,
 				name: name,
-				pair: pair,
+				path: path,
+				bookmarkKey: bookmarkKey,
 				fullUserData: userData,
 			});
 
@@ -208,65 +302,64 @@
 		} else {
 			console.log(`📚 ADD BOOKMARK FAILED: Bookmark already exists`, {
 				type: type,
-				pair: pair,
-				existingBookmarks: userData.user_bookmarks[pair],
+				path: path,
+				name: name,
+				existingEntry: targetArray[existingIndex],
 			});
 		}
 		return false;
 	}
 
-	function removeBookmark(type, pair) {
+	function removeBookmark(type, path = bookmarkPath) {
 		console.log(`📚 REMOVE BOOKMARK STARTED:`, {
 			type: type,
-			pair: pair,
+			path: path,
 		});
 
 		const userData = getUserData();
+		const bookmarkKey = buildBookmarkKey(path, type);
+		const targetArray = getNestedPath(userData.user_bookmarks, bookmarkKey);
 
-		if (userData.user_bookmarks[pair]) {
-			const index = userData.user_bookmarks[pair].indexOf(type);
-			if (index > -1) {
-				userData.user_bookmarks[pair].splice(index, 1);
-				console.log(`📚 REMOVE BOOKMARK: Removed ${type} from ${pair}`);
+		if (Array.isArray(targetArray) && targetArray.length > 0) {
+			// Clear the array (could be enhanced to remove specific entries)
+			targetArray.length = 0;
 
-				// Clean up empty pairs
-				if (userData.user_bookmarks[pair].length === 0) {
-					delete userData.user_bookmarks[pair];
-					console.log(`📚 REMOVE BOOKMARK: Cleaned up empty pair ${pair}`);
-				}
+			console.log(`📚 REMOVE BOOKMARK: Cleared array for ${bookmarkKey.join('/')}`);
 
-				// Remove metadata
-				if (userData.bookmark_metadata[pair] && userData.bookmark_metadata[pair][type]) {
-					delete userData.bookmark_metadata[pair][type];
-					if (Object.keys(userData.bookmark_metadata[pair]).length === 0) {
-						delete userData.bookmark_metadata[pair];
-						console.log(`📚 REMOVE BOOKMARK: Cleaned up empty metadata for ${pair}`);
-					}
-				}
-
-				saveUserData(userData);
-
-				console.log(`📚 REMOVE BOOKMARK SUCCESS:`, {
-					type: type,
-					pair: pair,
-					fullUserData: userData,
-				});
-
-				// Update QuickActionsBar badge for non-registered users
-				if (!userData.is_registered) {
-					const totalBookmarks = countTotalUserBookmarksInGeneral();
-					updateQuickActionsBarBadge(totalBookmarks);
-				}
-
-				return true;
-			} else {
-				console.log(`📚 REMOVE BOOKMARK FAILED: Type ${type} not found in pair ${pair}`, {
-					availableTypes: userData.user_bookmarks[pair],
-				});
+			// Clean up empty nested objects
+			if (targetArray.length === 0) {
+				deleteNestedPath(userData.user_bookmarks, bookmarkKey);
+				console.log(`📚 REMOVE BOOKMARK: Cleaned up empty path ${bookmarkKey.join('/')}`);
 			}
+
+			// Remove metadata
+			const metadataKey = buildMetadataKey(path, type);
+			if (userData.bookmark_metadata && userData.bookmark_metadata[metadataKey]) {
+				delete userData.bookmark_metadata[metadataKey];
+				console.log(`📚 REMOVE BOOKMARK: Cleaned up metadata for ${metadataKey}`);
+			}
+
+			saveUserData(userData);
+
+			console.log(`📚 REMOVE BOOKMARK SUCCESS:`, {
+				type: type,
+				path: path,
+				fullUserData: userData,
+			});
+
+			// Update QuickActionsBar badge for non-registered users
+			if (!userData.is_registered) {
+				const totalBookmarks = countTotalUserBookmarksInGeneral();
+				updateQuickActionsBarBadge(totalBookmarks);
+			}
+
+			return true;
 		} else {
-			console.log(`📚 REMOVE BOOKMARK FAILED: Pair ${pair} not found`, {
-				availablePairs: Object.keys(userData.user_bookmarks),
+			console.log(`📚 REMOVE BOOKMARK FAILED: Path not found or empty`, {
+				type: type,
+				path: path,
+				bookmarkKey: bookmarkKey,
+				targetArray: targetArray,
 			});
 		}
 		return false;
@@ -342,7 +435,7 @@
 
 		// Add bookmark
 		if (currentBookmark) {
-			const success = addBookmark(currentBookmark.type, currentBookmark.name, currencyPair);
+			const success = addBookmark(currentBookmark.type, currentBookmark.name, bookmarkPath);
 
 			if (success) {
 				updateBookmarkIcon(currentBookmark.element, true);
@@ -390,7 +483,7 @@
 
 		// Add bookmark
 		if (currentBookmark) {
-			const success = addBookmark(currentBookmark.type, currentBookmark.name, currencyPair);
+			const success = addBookmark(currentBookmark.type, currentBookmark.name, bookmarkPath);
 
 			if (success) {
 				updateBookmarkIcon(currentBookmark.element, true);
@@ -467,12 +560,12 @@
 
 		console.log(`🚀 INITIALIZING BOOKMARKS:`, {
 			totalIcons: bookmarkIcons.length,
-			currencyPair: currencyPair,
+			bookmarkPath: bookmarkPath,
 		});
 
 		bookmarkIcons.forEach((icon) => {
 			const type = icon.getAttribute('data-bookmark-type');
-			const isActive = isBookmarked(type, currencyPair);
+			const isActive = isBookmarked(type, bookmarkPath);
 			updateBookmarkIcon(icon, isActive);
 
 			console.log(`🚀 INITIALIZED ICON:`, {
@@ -490,13 +583,13 @@
 				console.log(`🖱️ BOOKMARK ICON CLICKED:`, {
 					type: bookmarkType,
 					name: bookmarkName,
-					pair: currencyPair,
+					path: bookmarkPath,
 				});
 
-				if (isBookmarked(bookmarkType, currencyPair)) {
+				if (isBookmarked(bookmarkType, bookmarkPath)) {
 					// Remove bookmark
-					console.log(`🖱️ REMOVING BOOKMARK:`, { type: bookmarkType, pair: currencyPair });
-					const success = removeBookmark(bookmarkType, currencyPair);
+					console.log(`🖱️ REMOVING BOOKMARK:`, { type: bookmarkType, path: bookmarkPath });
+					const success = removeBookmark(bookmarkType, bookmarkPath);
 					if (success) {
 						updateBookmarkIcon(this, false);
 						showNotification(`Bookmark "${bookmarkName}" eliminado.`);
@@ -510,7 +603,7 @@
 					if (userData.user_email) {
 						// Add bookmark directly
 						console.log(`🖱️ USER LOGGED IN - Adding bookmark directly`);
-						const success = addBookmark(bookmarkType, bookmarkName, currencyPair);
+						const success = addBookmark(bookmarkType, bookmarkName, bookmarkPath);
 						if (success) {
 							updateBookmarkIcon(this, true);
 							showNotification(`Bookmark "${bookmarkName}" guardado!`);
@@ -576,12 +669,21 @@
 		const userData = getUserData();
 		let totalBookmarks = 0;
 
-		Object.keys(userData.user_bookmarks).forEach((pair) => {
-			totalBookmarks += userData.user_bookmarks[pair].length;
-		});
+		function countNestedBookmarks(obj) {
+			let count = 0;
+			for (const key in obj) {
+				if (Array.isArray(obj[key])) {
+					count += obj[key].length;
+				} else if (typeof obj[key] === 'object') {
+					count += countNestedBookmarks(obj[key]);
+				}
+			}
+			return count;
+		}
+
+		totalBookmarks = countNestedBookmarks(userData.user_bookmarks);
 
 		console.log(`📊 TOTAL USER BOOKMARKS IN GENERAL: ${totalBookmarks}`);
-
 		return totalBookmarks;
 	}
 
@@ -591,7 +693,7 @@
 
 		bookmarkIcons.forEach((icon) => {
 			const type = icon.getAttribute('data-bookmark-type');
-			if (isBookmarked(type, currencyPair)) {
+			if (isBookmarked(type, bookmarkPath)) {
 				userBookmarksCount++;
 			}
 		});
@@ -697,6 +799,214 @@
 		}
 	}
 
+	/**
+	 * ====================================================================
+	 * INJECTION AUTOMATIQUE DES BOUTONS BOOKMARK
+	 * ====================================================================
+	 * 
+	 * Configuration des éléments qui doivent recevoir automatiquement
+	 * des boutons de bookmark lors du chargement de la page
+	 */
+
+	// Configuration des IDs d'éléments et leurs types de bookmark correspondants
+	const BOOKMARK_INJECTION_CONFIG = [
+		{
+			elementId: 'currency-rate-display',
+			bookmarkType: 'rate',
+			bookmarkName: 'Cotización Actual',
+			position: 'append' // 'append', 'prepend', 'before', 'after'
+		},
+		{
+			elementId: 'main-chart-container',
+			bookmarkType: 'chart',
+			bookmarkName: 'Gráfico Principal',
+			position: 'append'
+		},
+		{
+			elementId: 'news-section',
+			bookmarkType: 'news',
+			bookmarkName: 'Noticias Financieras',
+			position: 'prepend'
+		}
+		// Ajouter d'autres configurations ici selon les besoins
+	];
+
+	/**
+	 * Crée un bouton de bookmark avec la configuration spécifiée
+	 * @param {string} bookmarkType - Type du bookmark (rate, chart, news, etc.)
+	 * @param {string} bookmarkName - Nom affiché du bookmark
+	 * @returns {HTMLElement} - Élément bouton créé
+	 */
+	function createBookmarkButton(bookmarkType, bookmarkName) {
+		console.log(`🔧 CRÉATION BOUTON BOOKMARK:`, {
+			type: bookmarkType,
+			name: bookmarkName
+		});
+
+		// Créer le bouton principal
+		const button = document.createElement('button');
+		button.className = 'bookmark-icon';
+		button.setAttribute('data-bookmark-type', bookmarkType);
+		button.setAttribute('data-bookmark-name', bookmarkName);
+		button.setAttribute('data-auto-injected', 'true');
+
+		// Créer l'icône FontAwesome
+		const icon = document.createElement('i');
+		icon.className = 'far fa-bookmark';
+
+		// Assembler le bouton
+		button.appendChild(icon);
+
+		// Ajouter styles inline pour assurer la visibilité
+		button.style.cssText = `
+			margin-left: 8px;
+			padding: 6px 8px;
+			background: transparent;
+			border: 1px solid #e2e8f0;
+			border-radius: 4px;
+			cursor: pointer;
+			transition: all 0.2s ease;
+		`;
+
+		// Ajouter événements hover
+		button.addEventListener('mouseenter', function() {
+			this.style.borderColor = '#3b82f6';
+			this.style.backgroundColor = '#f8fafc';
+		});
+
+		button.addEventListener('mouseleave', function() {
+			this.style.borderColor = '#e2e8f0';
+			this.style.backgroundColor = 'transparent';
+		});
+
+		console.log(`🔧 BOUTON BOOKMARK CRÉÉ:`, {
+			type: bookmarkType,
+			name: bookmarkName,
+			element: button
+		});
+
+		return button;
+	}
+
+	/**
+	 * Injecte un bouton de bookmark dans l'élément cible selon la position spécifiée
+	 * @param {HTMLElement} targetElement - Élément cible où injecter le bouton
+	 * @param {HTMLElement} bookmarkButton - Bouton de bookmark à injecter
+	 * @param {string} position - Position d'injection ('append', 'prepend', 'before', 'after')
+	 */
+	function injectBookmarkButton(targetElement, bookmarkButton, position = 'append') {
+		console.log(`💉 INJECTION BOUTON:`, {
+			targetId: targetElement.id,
+			position: position
+		});
+
+		switch (position) {
+			case 'append':
+				targetElement.appendChild(bookmarkButton);
+				break;
+			case 'prepend':
+				targetElement.insertBefore(bookmarkButton, targetElement.firstChild);
+				break;
+			case 'before':
+				targetElement.parentNode.insertBefore(bookmarkButton, targetElement);
+				break;
+			case 'after':
+				targetElement.parentNode.insertBefore(bookmarkButton, targetElement.nextSibling);
+				break;
+			default:
+				console.warn(`⚠️ Position d'injection inconnue: ${position}. Utilisation de 'append' par défaut.`);
+				targetElement.appendChild(bookmarkButton);
+		}
+
+		console.log(`💉 INJECTION RÉUSSIE:`, {
+			targetId: targetElement.id,
+			position: position
+		});
+	}
+
+	/**
+	 * Fonction principale pour injecter automatiquement les boutons de bookmark
+	 * Parcourt la configuration et ajoute les boutons aux éléments trouvés
+	 */
+	function autoInjectBookmarkButtons() {
+		console.log(`🚀 DÉBUT AUTO-INJECTION BOUTONS BOOKMARK`);
+		
+		let successCount = 0;
+		let failureCount = 0;
+
+		BOOKMARK_INJECTION_CONFIG.forEach((config, index) => {
+			console.log(`🔍 TRAITEMENT CONFIG ${index + 1}:`, config);
+
+			// Rechercher l'élément cible
+			const targetElement = document.getElementById(config.elementId);
+			
+			if (!targetElement) {
+				console.log(`❌ ÉLÉMENT NON TROUVÉ: ${config.elementId}`);
+				failureCount++;
+				return;
+			}
+
+			// Vérifier si un bouton bookmark n'existe pas déjà
+			const existingBookmark = targetElement.querySelector('.bookmark-icon[data-auto-injected="true"]');
+			if (existingBookmark) {
+				console.log(`⚠️ BOUTON DÉJÀ EXISTANT pour: ${config.elementId}`);
+				return;
+			}
+
+			// Créer et injecter le bouton
+			try {
+				const bookmarkButton = createBookmarkButton(config.bookmarkType, config.bookmarkName);
+				injectBookmarkButton(targetElement, bookmarkButton, config.position);
+				successCount++;
+				
+				console.log(`✅ INJECTION RÉUSSIE pour: ${config.elementId}`);
+			} catch (error) {
+				console.error(`❌ ERREUR INJECTION pour ${config.elementId}:`, error);
+				failureCount++;
+			}
+		});
+
+		console.log(`🎯 RÉSULTATS AUTO-INJECTION:`, {
+			total: BOOKMARK_INJECTION_CONFIG.length,
+			succès: successCount,
+			échecs: failureCount
+		});
+
+		// Réinitialiser les événements bookmark après injection
+		if (successCount > 0) {
+			console.log(`🔄 RÉINITIALISATION DES ÉVÉNEMENTS BOOKMARK`);
+			initializeBookmarks();
+		}
+	}
+
+	/**
+	 * Fonction utilitaire pour ajouter manuellement une nouvelle configuration d'injection
+	 * @param {string} elementId - ID de l'élément cible
+	 * @param {string} bookmarkType - Type du bookmark
+	 * @param {string} bookmarkName - Nom du bookmark
+	 * @param {string} position - Position d'injection
+	 */
+	function addBookmarkInjectionConfig(elementId, bookmarkType, bookmarkName, position = 'append') {
+		BOOKMARK_INJECTION_CONFIG.push({
+			elementId: elementId,
+			bookmarkType: bookmarkType,
+			bookmarkName: bookmarkName,
+			position: position
+		});
+
+		console.log(`➕ NOUVELLE CONFIG AJOUTÉE:`, {
+			elementId: elementId,
+			bookmarkType: bookmarkType,
+			bookmarkName: bookmarkName,
+			position: position
+		});
+	}
+
+	// Exposer les fonctions utilitaires dans window pour utilisation en console
+	window.autoInjectBookmarkButtons = autoInjectBookmarkButtons;
+	window.addBookmarkInjectionConfig = addBookmarkInjectionConfig;
+	window.BOOKMARK_INJECTION_CONFIG = BOOKMARK_INJECTION_CONFIG;
+
 	// Developer utility functions (available in console)
 	window.displayReadableCookies = function () {
 		console.log('🍪 === COOKIES DECODIFICADAS ===');
@@ -749,19 +1059,31 @@
 		const userData = getUserData();
 		console.log('Email del usuario:', userData.user_email);
 		console.log('¿Está registrado?:', userData.is_registered);
-		console.log('Bookmarks por par de monedas:', userData.user_bookmarks);
+		console.log('Bookmarks jerárquicos:', userData.user_bookmarks);
 		console.log('Metadata de bookmarks:', userData.bookmark_metadata);
 
 		// Mostrar resumen organizado
-		if (Object.keys(userData.bookmark_metadata).length > 0) {
-			console.log('📚 === RESUMEN ORGANIZADO ===');
-			Object.keys(userData.bookmark_metadata).forEach((pair) => {
-				console.log(`\n💱 Par: ${pair}`);
-				Object.keys(userData.bookmark_metadata[pair]).forEach((type) => {
-					const meta = userData.bookmark_metadata[pair][type];
-					console.log(`  📌 ${meta.name} (${type}) - ${new Date(meta.timestamp).toLocaleString()}`);
-				});
-			});
+		function displayNestedStructure(obj, indent = '') {
+			for (const key in obj) {
+				if (Array.isArray(obj[key])) {
+					console.log(`${indent}� ${key}: ${obj[key].length} bookmark(s)`);
+					obj[key].forEach((bookmark, index) => {
+						console.log(
+							`${indent}  ${index + 1}. ${bookmark.name || bookmark} - ${
+								bookmark.timestamp ? new Date(bookmark.timestamp).toLocaleString() : 'No timestamp'
+							}`,
+						);
+					});
+				} else if (typeof obj[key] === 'object') {
+					console.log(`${indent}📁 ${key}:`);
+					displayNestedStructure(obj[key], indent + '  ');
+				}
+			}
+		}
+
+		if (Object.keys(userData.user_bookmarks).length > 0) {
+			console.log('📚 === ESTRUCTURA JERÁRQUICA ===');
+			displayNestedStructure(userData.user_bookmarks);
 		}
 
 		return userData;
@@ -789,26 +1111,26 @@
 	};
 
 	// Test functions for developers
-	window.addTestBookmark = function (type, name, pair = currencyPair) {
+	window.addTestBookmark = function (type, name, path = bookmarkPath) {
 		const userData = getUserData();
 		if (!userData.user_email) {
 			console.log('❌ No hay usuario logueado. Usa: setUserEmail("test@example.com", false)');
 			return;
 		}
 
-		const success = addBookmark(type, name, pair);
+		const success = addBookmark(type, name, path);
 		if (success) {
-			console.log(`✅ Bookmark de prueba agregado: ${name} (${type}) para ${pair}`);
+			console.log(`✅ Bookmark de prueba agregado: ${name} (${type}) para ruta ${path.join('/')}`);
 			initializeBookmarks(); // Refresh icons
 		} else {
 			console.log(`❌ No se pudo agregar el bookmark (posiblemente ya existe)`);
 		}
 	};
 
-	window.removeTestBookmark = function (type, pair = currencyPair) {
-		const success = removeBookmark(type, pair);
+	window.removeTestBookmark = function (type, path = bookmarkPath) {
+		const success = removeBookmark(type, path);
 		if (success) {
-			console.log(`✅ Bookmark eliminado: ${type} para ${pair}`);
+			console.log(`✅ Bookmark eliminado: ${type} para ruta ${path.join('/')}`);
 			initializeBookmarks(); // Refresh icons
 		} else {
 			console.log(`❌ No se pudo eliminar el bookmark (posiblemente no existe)`);
@@ -873,24 +1195,32 @@
                     👤 Para ver datos del usuario unificados:
                     displayUserData()
 
-                    📚 Para ver resumen de bookmarks:
+                    📚 Para ver resumen de bookmarks (estructura jerárquica):
                     displayUserBookmarks()
 
-                    � Para contar bookmarks en la página:
+                    📈 Para contar bookmarks en la página:
                     countTotalBookmarksOnPage()     - Total de iconos bookmark en la página
                     countUserBookmarksOnPage()      - Bookmarks del usuario actual en la página
 
-                    �🗑️ Para limpiar datos:
+                    🗑️ Para limpiar datos:
                     clearAllBookmarks()     - Solo elimina bookmarks
                     clearAllUserData()      - Elimina todo
 
-                    🧪 Para pruebas:
-                    setTestUser('test@example.com', false)         - Email solo
-                    setTestUser('test@example.com', true, 'Juan') - Usuario registrado
-                    addTestBookmark('rate', 'Test Rate', 'EUR-USD')
-                    removeTestBookmark('rate', 'EUR-USD')
+                    🧪 Para pruebas (estructura jerárquica):
+                    setTestUser('test@example.com', false)                     - Email solo
+                    setTestUser('test@example.com', true, 'Juan')             - Usuario registrado
+                    addTestBookmark('rate', 'Test Rate', ['es', 'currencies', 'EUR-USD'])  - Con ruta específica
+                    addTestBookmark('rate', 'Test Rate')                      - Con ruta actual: ${bookmarkPath.join(
+						'/',
+					)}
+                    removeTestBookmark('rate', ['es', 'currencies', 'EUR-USD']) - Con ruta específica
+                    removeTestBookmark('rate')                                - Con ruta actual: ${bookmarkPath.join(
+						'/',
+					)}
 
                     📋 Estado actual:
+                    📍 Ruta actual: ${bookmarkPath.join('/')}
+                    🔗 URL completa: ${urlPath}
     `);
 
 	displayUserData();
